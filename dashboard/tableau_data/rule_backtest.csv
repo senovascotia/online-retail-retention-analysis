@@ -1,0 +1,11 @@
+rule,flagged,precision,recall,lift,revenue_captured,f1,rule_type,sort_order
+silent > 45 days,2974,0.549765,0.861433,1.253046,0.805428,0.671182,Fixed days of silence,1
+silent > 60 days,2689,0.577166,0.817703,1.315501,0.740658,0.676695,Fixed days of silence,2
+silent > 90 days,2335,0.605996,0.745522,1.38121,0.651427,0.668557,Fixed days of silence,3
+silent > 120 days,1994,0.629388,0.661222,1.434528,0.535851,0.644913,Fixed days of silence,4
+silent > 150 days,1764,0.64229,0.596944,1.463934,0.472706,0.618788,Fixed days of silence,5
+silent > 180 days,1602,0.65231,0.55058,1.486771,0.421457,0.597143,Fixed days of silence,6
+silent > 1.5x own avg gap (3+ orders),845,0.433136,0.534307,1.553599,0.518063,0.478431,Relative to own gap (3+ orders),7
+silent > 2x own avg gap (3+ orders),650,0.463077,0.439416,1.660993,0.439689,0.450936,Relative to own gap (3+ orders),8
+silent > 3x own avg gap (3+ orders),398,0.527638,0.306569,1.892565,0.345344,0.387812,Relative to own gap (3+ orders),9
+silent > 4x own avg gap (3+ orders),279,0.562724,0.229197,2.018413,0.287784,0.325726,Relative to own gap (3+ orders),10

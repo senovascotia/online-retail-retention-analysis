@@ -1,0 +1,20 @@
+metric,label,value,format
+gross_sales,Gross sales (GBP),20476260.43,currency
+tracked_customers,Tracked customers,5878.0,count
+repeat_rate,Repeat purchase rate,0.723886,percent
+yoy,"Sales growth, Jan-Nov 2011 vs 2010",0.019,percent
+new_cust_change,"New customers, Jun-Nov 2011 vs 2010",-0.413308,percent
+cancel_rate,Cancelled value / gross sales,0.07142,percent
+cancelled_value,Cancelled value (GBP),1462424.18,currency
+guest_share,Sales with no customer ID,0.151466,percent
+top10_share,Top 10% of customers' share of sales,0.639,percent
+champ_cust_share,Champions: share of customers,0.239507,percent
+champ_rev_share,Champions: share of net revenue,0.698622,percent
+flagged_customers,Customers silent 90+ days,1365.0,count
+flagged_rev,Their trailing 12m sales (GBP),808607.1,currency
+expected_loss,Expected loss at rule precision (GBP),490012.439615,currency
+rule_precision,90-day rule precision,0.605996,percent
+top_tier_customers,Top-tier customers at risk,60.0,count
+top_tier_rev,Top-tier trailing 12m sales (GBP),218262.44,currency
+quiet_vips,Top-value customers silent 142+ days,126.0,count
+quiet_vips_rev,Their lifetime net sales (GBP),858186.07,currency

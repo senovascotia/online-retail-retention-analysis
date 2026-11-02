@@ -1,0 +1,2432 @@
+<?xml version='1.0' encoding='utf-8'?>
+<workbook locale="en_US" source-build="0.0.0 (0000.0.0.0)" source-platform="win" version="18.1" xmlns:user="http://www.tableausoftware.com/xml/user">
+  <preferences />
+  <datasources>
+    <datasource caption="Headline KPIs" inline="true" name="kpis" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="kpis_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="headline_kpis.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="kpis_leaf" name="headline_kpis#csv" table="[headline_kpis#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="real" name="gross_sales" ordinal="0" />
+            <column datatype="integer" name="tracked_customers" ordinal="1" />
+            <column datatype="real" name="repeat_rate" ordinal="2" />
+            <column datatype="real" name="sales_growth" ordinal="3" />
+            <column datatype="real" name="new_customer_change" ordinal="4" />
+            <column datatype="integer" name="slipping_customers" ordinal="5" />
+            <column datatype="real" name="slipping_revenue" ordinal="6" />
+            <column datatype="real" name="slipping_revenue_share" ordinal="7" />
+            <column datatype="integer" name="quiet_customers" ordinal="8" />
+            <column datatype="real" name="quiet_lifetime_sales" ordinal="9" />
+            <column datatype="integer" name="flagged_customers" ordinal="10" />
+            <column datatype="real" name="flagged_sales" ordinal="11" />
+            <column datatype="real" name="expected_loss" ordinal="12" />
+            <column datatype="integer" name="top_tier_customers" ordinal="13" />
+            <column datatype="real" name="top_tier_sales" ordinal="14" />
+            <column datatype="real" name="gross_sales_m" ordinal="15" />
+            <column datatype="real" name="slipping_revenue_m" ordinal="16" />
+            <column datatype="real" name="flagged_sales_k" ordinal="17" />
+            <column datatype="real" name="expected_loss_k" ordinal="18" />
+            <column datatype="real" name="top_tier_sales_k" ordinal="19" />
+            <column datatype="real" name="quiet_lifetime_sales_k" ordinal="20" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Monthly sales" inline="true" name="monthly" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="monthly_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="monthly_gross_sales.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="monthly_leaf" name="monthly_gross_sales#csv" table="[monthly_gross_sales#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="date" name="month" ordinal="0" />
+            <column datatype="real" name="gross_sales" ordinal="1" />
+            <column datatype="real" name="gross_sales_m" ordinal="2" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Existing vs new customers" inline="true" name="newret" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="newret_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="customers_existing_vs_new.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="newret_leaf" name="customers_existing_vs_new#csv" table="[customers_existing_vs_new#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="date" name="month" ordinal="0" />
+            <column datatype="string" name="customer_type" ordinal="1" />
+            <column datatype="integer" name="customers" ordinal="2" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="New customers by region" inline="true" name="region" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="region_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="new_customers_domestic_overseas.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="region_leaf" name="new_customers_domestic_overseas#csv" table="[new_customers_domestic_overseas#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="date" name="month" ordinal="0" />
+            <column datatype="string" name="region" ordinal="1" />
+            <column datatype="integer" name="customers" ordinal="2" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Cohort retention" inline="true" name="cohort" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="cohort_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="cohort_heatmap.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="cohort_leaf" name="cohort_heatmap#csv" table="[cohort_heatmap#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="date" name="cohort_month" ordinal="0" />
+            <column datatype="integer" name="months_since_first_purchase" ordinal="1" />
+            <column datatype="integer" name="cohort_size" ordinal="2" />
+            <column datatype="integer" name="active_customers" ordinal="3" />
+            <column datatype="real" name="retention" ordinal="4" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="90-day repeat rate" inline="true" name="repeat" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="repeat_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="repeat_rate_90_days.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="repeat_leaf" name="repeat_rate_90_days#csv" table="[repeat_rate_90_days#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="string" name="acquisition_period" ordinal="0" />
+            <column datatype="real" name="repeat_pct" ordinal="1" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="RFM segment shares" inline="true" name="segments" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="segments_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="segment_shares_pct.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="segments_leaf" name="segment_shares_pct#csv" table="[segment_shares_pct#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="integer" name="revenue_rank" ordinal="0" />
+            <column datatype="string" name="segment" ordinal="1" />
+            <column datatype="string" name="measure" ordinal="2" />
+            <column datatype="real" name="share_pct" ordinal="3" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Revenue concentration" inline="true" name="conc" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="conc_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="revenue_concentration_pct.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="conc_leaf" name="revenue_concentration_pct#csv" table="[revenue_concentration_pct#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="real" name="customers_pct" ordinal="0" />
+            <column datatype="real" name="sales_pct" ordinal="1" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Churn by days silent" inline="true" name="churn" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="churn_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="churn_by_silence.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="churn_leaf" name="churn_by_silence#csv" table="[churn_by_silence#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="integer" name="sort_order" ordinal="0" />
+            <column datatype="string" name="days_silent" ordinal="1" />
+            <column datatype="real" name="churned_pct" ordinal="2" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Early-warning rules" inline="true" name="rules" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="rules_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="rule_table.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="rules_leaf" name="rule_table#csv" table="[rule_table#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="integer" name="Rank" ordinal="0" />
+            <column datatype="string" name="Rule" ordinal="1" />
+            <column datatype="string" name="Flagged" ordinal="2" />
+            <column datatype="string" name="Precision" ordinal="3" />
+            <column datatype="string" name="Recall" ordinal="4" />
+            <column datatype="string" name="Churner revenue caught" ordinal="5" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Contact list" inline="true" name="contacts" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="contacts_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="contact_list.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="contacts_leaf" name="contact_list#csv" table="[contact_list#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="integer" name="Rank" ordinal="0" />
+            <column datatype="string" name="Customer" ordinal="1" />
+            <column datatype="integer" name="Days silent" ordinal="2" />
+            <column datatype="real" name="Own avg gap days" ordinal="3" />
+            <column datatype="integer" name="Order days" ordinal="4" />
+            <column datatype="string" name="Trailing 12m sales" ordinal="5" />
+            <column datatype="string" name="Early flag" ordinal="6" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+    <datasource caption="Recommendations" inline="true" name="recs" version="18.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection name="recs_leaf">
+            <connection character-set="UTF-8" class="textscan" directory="D:/project-repo/data-analyst-portfolio/dashboard/tableau/data" driver="" filename="recommendations_table.csv" force-character-set="no" force-header="no" force-separator="no" header="yes" separator="," text-qualifier="&quot;" />
+          </named-connection>
+        </named-connections>
+        <relation connection="recs_leaf" name="recommendations_table#csv" table="[recommendations_table#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator="," text-qualifier="&quot;">
+            <column datatype="integer" name="Rank" ordinal="0" />
+            <column datatype="string" name="Action" ordinal="1" />
+            <column datatype="string" name="Effort" ordinal="2" />
+            <column datatype="string" name="Measured base" ordinal="3" />
+            <column datatype="string" name="Low" ordinal="4" />
+            <column datatype="string" name="Mid" ordinal="5" />
+            <column datatype="string" name="High" ordinal="6" />
+          </columns>
+        </relation>
+        <refresh increment-key="" incremental-updates="false" />
+      </connection>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="T Gross sales">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Gross sales, Dec 2009 to 9 Dec 2011</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[gross_sales_m]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[gross_sales_m]" derivation="Sum" name="[sum:gross_sales_m:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*£0.0&quot;M&quot;" field="[kpis].[sum:gross_sales_m:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:gross_sales_m:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:gross_sales_m:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:gross_sales_m:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:gross_sales_m:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:gross_sales_m:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Tracked customers">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Tracked customers</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="integer" name="[tracked_customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[tracked_customers]" derivation="Sum" name="[sum:tracked_customers:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*#,##0" field="[kpis].[sum:tracked_customers:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:tracked_customers:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:tracked_customers:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:tracked_customers:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:tracked_customers:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:tracked_customers:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Repeat rate">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Repeat rate (2+ orders)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[repeat_rate]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[repeat_rate]" derivation="Sum" name="[sum:repeat_rate:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*0%" field="[kpis].[sum:repeat_rate:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:repeat_rate:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:repeat_rate:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:repeat_rate:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:repeat_rate:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:repeat_rate:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Sales growth">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Sales growth, Jan-Nov 2011 vs 2010</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[sales_growth]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[sales_growth]" derivation="Sum" name="[sum:sales_growth:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*+0.0%;-0.0%" field="[kpis].[sum:sales_growth:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:sales_growth:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:sales_growth:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:sales_growth:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:sales_growth:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:sales_growth:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T New customers">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">New customers, Jun-Nov 2011 vs 2010</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[new_customer_change]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[new_customer_change]" derivation="Sum" name="[sum:new_customer_change:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*+0%;-0%" field="[kpis].[sum:new_customer_change:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:new_customer_change:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:new_customer_change:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:new_customer_change:qk]" />
+            <format attr="color" value="#f28e2b" field="[kpis].[sum:new_customer_change:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:new_customer_change:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Slipping customers">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Slipping customers</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="integer" name="[slipping_customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[slipping_customers]" derivation="Sum" name="[sum:slipping_customers:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*#,##0" field="[kpis].[sum:slipping_customers:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:slipping_customers:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:slipping_customers:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:slipping_customers:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:slipping_customers:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:slipping_customers:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Slipping revenue">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Their net revenue to date</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[slipping_revenue_m]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[slipping_revenue_m]" derivation="Sum" name="[sum:slipping_revenue_m:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*£0.0&quot;M&quot;" field="[kpis].[sum:slipping_revenue_m:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:slipping_revenue_m:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:slipping_revenue_m:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:slipping_revenue_m:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:slipping_revenue_m:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:slipping_revenue_m:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Quiet VIPs">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Top-value customers silent 142+ days</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="integer" name="[quiet_customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[quiet_customers]" derivation="Sum" name="[sum:quiet_customers:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*#,##0" field="[kpis].[sum:quiet_customers:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:quiet_customers:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:quiet_customers:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:quiet_customers:qk]" />
+            <format attr="color" value="#f28e2b" field="[kpis].[sum:quiet_customers:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:quiet_customers:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Flagged customers">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Customers silent 90+ days</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="integer" name="[flagged_customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[flagged_customers]" derivation="Sum" name="[sum:flagged_customers:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*#,##0" field="[kpis].[sum:flagged_customers:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:flagged_customers:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:flagged_customers:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:flagged_customers:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:flagged_customers:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:flagged_customers:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Flagged sales">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Their trailing 12m sales</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[flagged_sales_k]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[flagged_sales_k]" derivation="Sum" name="[sum:flagged_sales_k:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*£#,##0&quot;K&quot;" field="[kpis].[sum:flagged_sales_k:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:flagged_sales_k:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:flagged_sales_k:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:flagged_sales_k:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:flagged_sales_k:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:flagged_sales_k:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Expected loss">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Expected loss at rule precision</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="real" name="[expected_loss_k]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[expected_loss_k]" derivation="Sum" name="[sum:expected_loss_k:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*£#,##0&quot;K&quot;" field="[kpis].[sum:expected_loss_k:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:expected_loss_k:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:expected_loss_k:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:expected_loss_k:qk]" />
+            <format attr="color" value="#f28e2b" field="[kpis].[sum:expected_loss_k:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:expected_loss_k:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="T Top tier">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#52514e" fontsize="10">Top-tier customers at risk</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Headline KPIs" name="kpis" />
+          </datasources>
+          <datasource-dependencies datasource="kpis">
+            <column datatype="integer" name="[top_tier_customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[top_tier_customers]" derivation="Sum" name="[sum:top_tier_customers:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*#,##0" field="[kpis].[sum:top_tier_customers:qk]" />
+            <format attr="text-align" value="center" field="[kpis].[sum:top_tier_customers:qk]" />
+            <format attr="font-size" value="26" field="[kpis].[sum:top_tier_customers:qk]" />
+            <format attr="font-weight" value="bold" field="[kpis].[sum:top_tier_customers:qk]" />
+            <format attr="color" value="#0b0b0b" field="[kpis].[sum:top_tier_customers:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[kpis].[sum:top_tier_customers:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="Monthly sales">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Gross sales by month</run>
+            <run fontcolor="#52514e" fontsize="10">   GBP millions, cancellations excluded; Dec 2011 is partial and left out</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Monthly sales" name="monthly" />
+          </datasources>
+          <datasource-dependencies datasource="monthly">
+            <column datatype="real" name="[gross_sales_m]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="date" name="[month]" role="dimension" type="ordinal" />
+            <column-instance column="[gross_sales_m]" derivation="Sum" name="[sum:gross_sales_m:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[month]" derivation="Month-Trunc" name="[tmn:month:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[monthly].[sum:gross_sales_m:qk]" scope="rows" value="Gross sales (GBP millions)" />
+            <format attr="title" class="0" field="[monthly].[tmn:month:qk]" scope="cols" value="Month" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-color" value="#4e79a7" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[monthly].[sum:gross_sales_m:qk]</rows>
+        <cols>[monthly].[tmn:month:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="New vs returning">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Active customers: </run>
+            <run fontcolor="#4e79a7" fontsize="13" bold="true">■ Existing  </run>
+            <run fontcolor="#f28e2b" fontsize="13" bold="true">■ New</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Existing vs new customers" name="newret" />
+          </datasources>
+          <datasource-dependencies datasource="newret">
+            <column datatype="integer" name="[customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="date" name="[month]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[customer_type]" role="dimension" type="nominal" />
+            <column-instance column="[customers]" derivation="Sum" name="[sum:customers:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[month]" derivation="Month-Trunc" name="[tmn:month:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[customer_type]" derivation="None" name="[none:customer_type:nk]" pivot="key" type="nominal" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[newret].[sum:customers:qk]" scope="rows" value="Customers" />
+            <format attr="title" class="0" field="[newret].[tmn:month:qk]" scope="cols" value="Month" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <color column="[newret].[none:customer_type:nk]" />
+            </encodings>
+            <style />
+          </pane>
+        </panes>
+        <rows>[newret].[sum:customers:qk]</rows>
+        <cols>[newret].[tmn:month:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Cohort heatmap">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Cohort retention</run>
+            <run fontcolor="#52514e" fontsize="10">   share of each monthly cohort ordering again k months after the first purchase</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Cohort retention" name="cohort" />
+          </datasources>
+          <datasource-dependencies datasource="cohort">
+            <column datatype="date" name="[cohort_month]" role="dimension" type="ordinal" />
+            <column datatype="integer" name="[months_since_first_purchase]" role="dimension" type="ordinal" />
+            <column datatype="real" name="[retention]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[cohort_month]" derivation="Month-Trunc" name="[tmn:cohort_month:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[months_since_first_purchase]" derivation="None" name="[none:months_since_first_purchase:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[retention]" derivation="Avg" name="[avg:retention:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*0%" field="[cohort].[avg:retention:qk]" />
+            <format attr="font-size" value="9" field="[cohort].[avg:retention:qk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Square" />
+            <encodings>
+              <color column="[cohort].[avg:retention:qk]" />
+              <text column="[cohort].[avg:retention:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[cohort].[tmn:cohort_month:ok]</rows>
+        <cols>[cohort].[none:months_since_first_purchase:ok]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Repeat 90d">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">90-day repeat rate</run>
+            <run fontcolor="#52514e" fontsize="10">   new customers ordering again within 90 days (2009 Dec* overstated)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="90-day repeat rate" name="repeat" />
+          </datasources>
+          <datasource-dependencies datasource="repeat">
+            <column datatype="real" name="[repeat_pct]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="string" name="[acquisition_period]" role="dimension" type="nominal" />
+            <column-instance column="[repeat_pct]" derivation="Sum" name="[sum:repeat_pct:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[acquisition_period]" derivation="None" name="[none:acquisition_period:nk]" pivot="key" type="nominal" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[repeat].[sum:repeat_pct:qk]" scope="rows" value="Repeat within 90 days (%)" />
+            <format attr="title" class="0" field="[repeat].[none:acquisition_period:nk]" scope="cols" value="Acquired" />
+          </style-rule>
+          <style-rule element="cell">
+            <format attr="text-format" value="*0&quot;%&quot;" field="[repeat].[sum:repeat_pct:qk]" />
+          </style-rule>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" value="false" scope="cols" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <text column="[repeat].[sum:repeat_pct:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-color" value="#4e79a7" />
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[repeat].[sum:repeat_pct:qk]</rows>
+        <cols>[repeat].[none:acquisition_period:nk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="New customers by region">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">New customers per month: </run>
+            <run fontcolor="#4e79a7" fontsize="13" bold="true">■ Domestic (UK)  </run>
+            <run fontcolor="#f28e2b" fontsize="13" bold="true">■ Overseas</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="New customers by region" name="region" />
+          </datasources>
+          <datasource-dependencies datasource="region">
+            <column datatype="integer" name="[customers]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="date" name="[month]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[region]" role="dimension" type="nominal" />
+            <column-instance column="[customers]" derivation="Sum" name="[sum:customers:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[month]" derivation="Month-Trunc" name="[tmn:month:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[region]" derivation="None" name="[none:region:nk]" pivot="key" type="nominal" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[region].[sum:customers:qk]" scope="rows" value="New customers" />
+            <format attr="title" class="0" field="[region].[tmn:month:qk]" scope="cols" value="Month" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <color column="[region].[none:region:nk]" />
+            </encodings>
+            <style />
+          </pane>
+        </panes>
+        <rows>[region].[sum:customers:qk]</rows>
+        <cols>[region].[tmn:month:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="RFM segments">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">RFM segments: </run>
+            <run fontcolor="#4e79a7" fontsize="13" bold="true">■ Share of customers  </run>
+            <run fontcolor="#f28e2b" fontsize="13" bold="true">■ Share of net revenue</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="RFM segment shares" name="segments" />
+          </datasources>
+          <datasource-dependencies datasource="segments">
+            <column datatype="integer" name="[revenue_rank]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[segment]" role="dimension" type="nominal" />
+            <column datatype="string" name="[measure]" role="dimension" type="nominal" />
+            <column datatype="real" name="[share_pct]" role="measure" type="quantitative" aggregation="Sum" />
+            <column-instance column="[revenue_rank]" derivation="None" name="[none:revenue_rank:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[segment]" derivation="None" name="[none:segment:nk]" pivot="key" type="nominal" />
+            <column-instance column="[measure]" derivation="None" name="[none:measure:nk]" pivot="key" type="nominal" />
+            <column-instance column="[share_pct]" derivation="Sum" name="[sum:share_pct:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[segments].[sum:share_pct:qk]" scope="cols" value="Share (%)" />
+          </style-rule>
+          <style-rule element="cell">
+            <format attr="text-format" value="*0&quot;%&quot;" field="[segments].[sum:share_pct:qk]" />
+          </style-rule>
+          <style-rule element="label">
+            <format attr="display" value="false" field="[segments].[none:revenue_rank:ok]" />
+            <format attr="display" value="false" field="[segments].[none:measure:nk]" />
+          </style-rule>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" value="false" scope="rows" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <color column="[segments].[none:measure:nk]" />
+              <text column="[segments].[sum:share_pct:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>([segments].[none:revenue_rank:ok] / [segments].[none:segment:nk] / [segments].[none:measure:nk])</rows>
+        <cols>[segments].[sum:share_pct:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Concentration">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Revenue concentration</run>
+            <run fontcolor="#52514e" fontsize="10">   cumulative share of sales earned by the top share of customers</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Revenue concentration" name="conc" />
+          </datasources>
+          <datasource-dependencies datasource="conc">
+            <column datatype="real" name="[sales_pct]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="real" name="[customers_pct]" role="dimension" type="quantitative" />
+            <column-instance column="[sales_pct]" derivation="Sum" name="[sum:sales_pct:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[customers_pct]" derivation="None" name="[none:customers_pct:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[conc].[sum:sales_pct:qk]" scope="rows" value="Share of sales (%)" />
+            <format attr="title" class="0" field="[conc].[none:customers_pct:qk]" scope="cols" value="Share of customers, ranked by sales (%)" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Line" />
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-color" value="#4e79a7" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[conc].[sum:sales_pct:qk]</rows>
+        <cols>[conc].[none:customers_pct:qk]</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Churn by silence">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Churn rises with silence</run>
+            <run fontcolor="#52514e" fontsize="10">   no purchase in the next 161 days, by days since last purchase</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Churn by days silent" name="churn" />
+          </datasources>
+          <datasource-dependencies datasource="churn">
+            <column datatype="real" name="[churned_pct]" role="measure" type="quantitative" aggregation="Sum" />
+            <column datatype="integer" name="[sort_order]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[days_silent]" role="dimension" type="nominal" />
+            <column-instance column="[churned_pct]" derivation="Sum" name="[sum:churned_pct:qk]" pivot="key" type="quantitative" />
+            <column-instance column="[sort_order]" derivation="None" name="[none:sort_order:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[days_silent]" derivation="None" name="[none:days_silent:nk]" pivot="key" type="nominal" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[churn].[sum:churned_pct:qk]" scope="rows" value="Churned (%)" />
+            <format attr="title" class="0" field="[churn].[none:days_silent:nk]" scope="cols" value="Days since last purchase" />
+          </style-rule>
+          <style-rule element="cell">
+            <format attr="text-format" value="*0&quot;%&quot;" field="[churn].[sum:churned_pct:qk]" />
+          </style-rule>
+          <style-rule element="label">
+            <format attr="display" value="false" field="[churn].[none:sort_order:ok]" />
+          </style-rule>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" value="false" scope="cols" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Bar" />
+            <encodings>
+              <text column="[churn].[sum:churned_pct:qk]" />
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-color" value="#f28e2b" />
+                <format attr="mark-labels-show" value="true" />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[churn].[sum:churned_pct:qk]</rows>
+        <cols>([churn].[none:sort_order:ok] / [churn].[none:days_silent:nk])</cols>
+      </table>
+    </worksheet>
+    <worksheet name="Rule back-test">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Early-warning rules, back-tested</run>
+            <run fontcolor="#52514e" fontsize="10">   precision = share of flagged who churned; recall = share of churners flagged (at other cutoffs recall is 45-76%)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Early-warning rules" name="rules" />
+          </datasources>
+          <datasource-dependencies datasource="rules">
+            <column datatype="integer" name="[Rank]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[Rule]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Flagged]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Precision]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Recall]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Churner revenue caught]" role="dimension" type="nominal" />
+            <column-instance column="[Rank]" derivation="None" name="[none:Rank:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[Rule]" derivation="None" name="[none:Rule:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Flagged]" derivation="None" name="[none:Flagged:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Precision]" derivation="None" name="[none:Precision:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Recall]" derivation="None" name="[none:Recall:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Churner revenue caught]" derivation="None" name="[none:Churner revenue caught:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Rank]" derivation="Sum" name="[sum:Rank:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*;;;" field="[rules].[sum:Rank:qk]" />
+          </style-rule>
+          <style-rule element="header">
+            <format attr="width" value="270" field="[rules].[none:Rule:nk]" />
+            <format attr="width" value="170" field="[rules].[none:Churner revenue caught:nk]" />
+            <format attr="width" value="80" field="[rules].[none:Flagged:nk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[rules].[sum:Rank:qk]" />
+            </encodings>
+            <style />
+          </pane>
+        </panes>
+        <rows>([rules].[none:Rank:ok] / [rules].[none:Rule:nk] / [rules].[none:Flagged:nk] / [rules].[none:Precision:nk] / [rules].[none:Recall:nk] / [rules].[none:Churner revenue caught:nk])</rows>
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="Contact list">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Top-value customers to contact first</run>
+            <run fontcolor="#52514e" fontsize="10">   highest trailing 12m sales among customers silent 90+ days (as of 10 Dec 2011)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Contact list" name="contacts" />
+          </datasources>
+          <datasource-dependencies datasource="contacts">
+            <column datatype="integer" name="[Rank]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[Customer]" role="dimension" type="nominal" />
+            <column datatype="integer" name="[Days silent]" role="dimension" type="ordinal" />
+            <column datatype="real" name="[Own avg gap days]" role="dimension" type="nominal" />
+            <column datatype="integer" name="[Order days]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[Trailing 12m sales]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Early flag]" role="dimension" type="nominal" />
+            <column-instance column="[Rank]" derivation="None" name="[none:Rank:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[Customer]" derivation="None" name="[none:Customer:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Days silent]" derivation="None" name="[none:Days silent:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[Own avg gap days]" derivation="None" name="[none:Own avg gap days:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Order days]" derivation="None" name="[none:Order days:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[Trailing 12m sales]" derivation="None" name="[none:Trailing 12m sales:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Early flag]" derivation="None" name="[none:Early flag:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Rank]" derivation="Sum" name="[sum:Rank:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*;;;" field="[contacts].[sum:Rank:qk]" />
+          </style-rule>
+          <style-rule element="header">
+            <format attr="width" value="95" field="[contacts].[none:Days silent:ok]" />
+            <format attr="width" value="140" field="[contacts].[none:Own avg gap days:nk]" />
+            <format attr="width" value="100" field="[contacts].[none:Order days:ok]" />
+            <format attr="width" value="150" field="[contacts].[none:Trailing 12m sales:nk]" />
+            <format attr="width" value="90" field="[contacts].[none:Early flag:nk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[contacts].[sum:Rank:qk]" />
+            </encodings>
+            <style />
+          </pane>
+        </panes>
+        <rows>([contacts].[none:Rank:ok] / [contacts].[none:Customer:nk] / [contacts].[none:Days silent:ok] / [contacts].[none:Own avg gap days:nk] / [contacts].[none:Order days:ok] / [contacts].[none:Trailing 12m sales:nk] / [contacts].[none:Early flag:nk])</rows>
+        <cols />
+      </table>
+    </worksheet>
+    <worksheet name="Recommendations">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontcolor="#0b0b0b" fontsize="13" bold="true">Recommendations, ranked by value for effort</run>
+            <run fontcolor="#52514e" fontsize="10">   annual impact under low / mid / high scenarios (scenario percentages are assumptions)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Recommendations" name="recs" />
+          </datasources>
+          <datasource-dependencies datasource="recs">
+            <column datatype="integer" name="[Rank]" role="dimension" type="ordinal" />
+            <column datatype="string" name="[Action]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Effort]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Measured base]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Low]" role="dimension" type="nominal" />
+            <column datatype="string" name="[Mid]" role="dimension" type="nominal" />
+            <column datatype="string" name="[High]" role="dimension" type="nominal" />
+            <column-instance column="[Rank]" derivation="None" name="[none:Rank:ok]" pivot="key" type="ordinal" />
+            <column-instance column="[Action]" derivation="None" name="[none:Action:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Effort]" derivation="None" name="[none:Effort:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Measured base]" derivation="None" name="[none:Measured base:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Low]" derivation="None" name="[none:Low:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Mid]" derivation="None" name="[none:Mid:nk]" pivot="key" type="nominal" />
+            <column-instance column="[High]" derivation="None" name="[none:High:nk]" pivot="key" type="nominal" />
+            <column-instance column="[Rank]" derivation="Sum" name="[sum:Rank:qk]" pivot="key" type="quantitative" />
+          </datasource-dependencies>
+          <aggregation value="true" />
+        </view>
+        <style>
+          <style-rule element="cell">
+            <format attr="text-format" value="*;;;" field="[recs].[sum:Rank:qk]" />
+          </style-rule>
+          <style-rule element="header">
+            <format attr="width" value="640" field="[recs].[none:Action:nk]" />
+            <format attr="width" value="120" field="[recs].[none:Effort:nk]" />
+            <format attr="width" value="130" field="[recs].[none:Measured base:nk]" />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto" />
+            </view>
+            <mark class="Text" />
+            <encodings>
+              <text column="[recs].[sum:Rank:qk]" />
+            </encodings>
+            <style />
+          </pane>
+        </panes>
+        <rows>([recs].[none:Rank:ok] / [recs].[none:Action:nk] / [recs].[none:Effort:nk] / [recs].[none:Measured base:nk] / [recs].[none:Low:nk] / [recs].[none:Mid:nk] / [recs].[none:High:nk])</rows>
+        <cols />
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Overview">
+      <size maxheight="1010" maxwidth="1280" minheight="1010" minwidth="1280" />
+      <datasources>
+        <datasource caption="Headline KPIs" name="kpis" />
+        <datasource caption="Monthly sales" name="monthly" />
+        <datasource caption="Existing vs new customers" name="newret" />
+      </datasources>
+      <zones>
+        <zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="6337" id="2" w="100000" x="0" y="0" type="text">
+            <formatted-text>
+              <run fontsize="17" fontcolor="#ffffff" bold="true">  Sales are flat while new-customer acquisition fell 41%
+</run>
+              <run fontsize="9" fontcolor="#c9d1e3">  Online Retail II  ·  Overview  ·  Dec 2009 to 9 Dec 2011</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#1f2a44" />
+              <format attr="border-style" value="none" />
+              <format attr="border-width" value="0" />
+              <format attr="margin" value="0" />
+            </zone-style>
+          </zone>
+          <zone h="14851" id="3" w="28125" x="0" y="6337" name="T Gross sales" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14851" id="4" w="17969" x="28125" y="6337" name="T Tracked customers" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14851" id="5" w="17969" x="46094" y="6337" name="T Repeat rate" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14851" id="6" w="17969" x="64062" y="6337" name="T Sales growth" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14851" id="7" w="17969" x="82031" y="6337" name="T New customers" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="36634" id="8" w="100000" x="0" y="21188" name="Monthly sales" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="41188" id="9" w="54688" x="0" y="57822" name="New vs returning" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="41188" id="10" w="45312" x="54688" y="57822" type="text">
+            <formatted-text>
+              <run fontsize="14" fontcolor="#0b0b0b" bold="true">Key insights
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Sales are flat (+1.9% on the same months a year earlier), but not because customers leave after one order: 72% reorder.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• New-customer acquisition fell 41% (Jun-Nov 2011 vs 2010). Cohort quality has been stable since mid-2010, so volume is the part to investigate.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Revenue is concentrated: the top 10% of customers bring 64% of sales; RFM Champions (24% of customers) bring 70%.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Silence is the churn signal, not slowing gaps or cancellations. A 90-day rule flags 1,365 customers worth £809K in trailing sales.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Leaks: cancellations are 7.1% of gross sales; 15% of sales have no customer ID.</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="background-color" value="#f3f4f6" />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Retention">
+      <size maxheight="1090" maxwidth="1280" minheight="1090" minwidth="1280" />
+      <datasources>
+        <datasource caption="Cohort retention" name="cohort" />
+        <datasource caption="New customers by region" name="region" />
+        <datasource caption="90-day repeat rate" name="repeat" />
+      </datasources>
+      <zones>
+        <zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="5872" id="2" w="100000" x="0" y="0" type="text">
+            <formatted-text>
+              <run fontsize="17" fontcolor="#ffffff" bold="true">  Cohort quality is stable since mid-2010; acquisition volume is what fell
+</run>
+              <run fontsize="9" fontcolor="#c9d1e3">  Online Retail II  ·  Retention  ·  Dec 2009 to 9 Dec 2011</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#1f2a44" />
+              <format attr="border-style" value="none" />
+              <format attr="border-width" value="0" />
+              <format attr="margin" value="0" />
+            </zone-style>
+          </zone>
+          <zone h="59633" id="3" w="100000" x="0" y="5872" name="Cohort heatmap" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="33578" id="4" w="34375" x="0" y="65505" name="Repeat 90d" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="33578" id="5" w="37500" x="34375" y="65505" name="New customers by region" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="33578" id="6" w="28125" x="71875" y="65505" type="text">
+            <formatted-text>
+              <run fontsize="14" fontcolor="#0b0b0b" bold="true">What to notice
+</run>
+              <run fontsize="11" fontcolor="#52514e">• About 20% of every 2010-2011 cohort orders again in month 1; the 90-day repeat rate fell from 45% (2010 H1) to about 41% and then held.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Activity is seasonal: cohorts light up again when the Sep-Nov peak returns.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• New customers fell 41% (Jun-Nov 2011 vs 2010); UK arrivals dropped 43%.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• The 2009 Dec cohort is overstated: it includes people who bought before the data starts.</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="background-color" value="#f3f4f6" />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Segments">
+      <size maxheight="990" maxwidth="1280" minheight="990" minwidth="1280" />
+      <datasources>
+        <datasource caption="Revenue concentration" name="conc" />
+        <datasource caption="Headline KPIs" name="kpis" />
+        <datasource caption="RFM segment shares" name="segments" />
+      </datasources>
+      <zones>
+        <zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="6465" id="2" w="100000" x="0" y="0" type="text">
+            <formatted-text>
+              <run fontsize="17" fontcolor="#ffffff" bold="true">  24% of customers bring 70% of revenue
+</run>
+              <run fontsize="9" fontcolor="#c9d1e3">  Online Retail II  ·  Segments  ·  Dec 2009 to 9 Dec 2011</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#1f2a44" />
+              <format attr="border-style" value="none" />
+              <format attr="border-width" value="0" />
+              <format attr="margin" value="0" />
+            </zone-style>
+          </zone>
+          <zone h="56566" id="3" w="100000" x="0" y="6465" name="RFM segments" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="35960" id="4" w="50000" x="0" y="63030" name="Concentration" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="16162" id="5" w="16719" x="50000" y="63030" name="T Slipping customers" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="16162" id="6" w="16719" x="66719" y="63030" name="T Slipping revenue" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="16162" id="7" w="16562" x="83438" y="63030" name="T Quiet VIPs" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="19798" id="8" w="50000" x="50000" y="79192" type="text">
+            <formatted-text>
+              <run fontsize="13" fontcolor="#0b0b0b" bold="true">Who is slipping away?
+</run>
+              <run fontsize="11" fontcolor="#52514e">Need Attention, About to Sleep, At Risk and Can't Lose Them. 142 days is twice the 71-day upper end of a typical reorder gap. Many At Risk customers have been silent 6-13 months and may already be lost.</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="background-color" value="#f3f4f6" />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Churn risk">
+      <size maxheight="1040" maxwidth="1280" minheight="1040" minwidth="1280" />
+      <datasources>
+        <datasource caption="Churn by days silent" name="churn" />
+        <datasource caption="Contact list" name="contacts" />
+        <datasource caption="Headline KPIs" name="kpis" />
+        <datasource caption="Early-warning rules" name="rules" />
+      </datasources>
+      <zones>
+        <zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="6154" id="2" w="100000" x="0" y="0" type="text">
+            <formatted-text>
+              <run fontsize="17" fontcolor="#ffffff" bold="true">  Silence is the signal: contact customers quiet for 90+ days, biggest first
+</run>
+              <run fontsize="9" fontcolor="#c9d1e3">  Online Retail II  ·  Churn risk  ·  Dec 2009 to 9 Dec 2011</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#1f2a44" />
+              <format attr="border-style" value="none" />
+              <format attr="border-width" value="0" />
+              <format attr="margin" value="0" />
+            </zone-style>
+          </zone>
+          <zone h="14423" id="3" w="25000" x="0" y="6154" name="T Flagged customers" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14423" id="4" w="25000" x="25000" y="6154" name="T Flagged sales" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14423" id="5" w="25000" x="50000" y="6154" name="T Expected loss" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="14423" id="6" w="25000" x="75000" y="6154" name="T Top tier" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="33654" id="7" w="43750" x="0" y="20577" name="Churn by silence" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="33654" id="8" w="56250" x="43750" y="20577" name="Rule back-test" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="44808" id="9" w="100000" x="0" y="54231" name="Contact list" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="background-color" value="#f3f4f6" />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+    <dashboard name="Actions">
+      <size maxheight="650" maxwidth="1280" minheight="650" minwidth="1280" />
+      <datasources>
+        <datasource caption="Recommendations" name="recs" />
+      </datasources>
+      <zones>
+        <zone h="100000" id="1" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="9846" id="2" w="100000" x="0" y="0" type="text">
+            <formatted-text>
+              <run fontsize="17" fontcolor="#ffffff" bold="true">  Four moves, sized under low, mid and high scenarios
+</run>
+              <run fontsize="9" fontcolor="#c9d1e3">  Online Retail II  ·  Actions  ·  Dec 2009 to 9 Dec 2011</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#1f2a44" />
+              <format attr="border-style" value="none" />
+              <format attr="border-width" value="0" />
+              <format attr="margin" value="0" />
+            </zone-style>
+          </zone>
+          <zone h="52308" id="3" w="100000" x="0" y="9846" name="Recommendations" show-title="true">
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone h="36308" id="4" w="100000" x="0" y="62154" type="text">
+            <formatted-text>
+              <run fontsize="13" fontcolor="#0b0b0b" bold="true">What this data cannot tell you
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Why acquisition fell (there is no channel or marketing data).
+</run>
+              <run fontsize="11" fontcolor="#52514e">• What a win-back campaign will really recover: run a small test with a holdout group before scaling.
+</run>
+              <run fontsize="11" fontcolor="#52514e">• Causes: product mix adds little to churn prediction (notebook 11), but nothing here shows what changes customer behaviour.</run>
+            </formatted-text>
+            <zone-style>
+              <format attr="background-color" value="#ffffff" />
+              <format attr="border-color" value="#dfe2e8" />
+              <format attr="border-style" value="solid" />
+              <format attr="border-width" value="1" />
+              <format attr="margin" value="6" />
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="background-color" value="#f3f4f6" />
+          </zone-style>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+  <windows source-height="32">
+    <window class="dashboard" name="Overview" maximized="true">
+      <viewpoints>
+        <viewpoint name="T Gross sales">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Tracked customers">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Repeat rate">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Sales growth">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T New customers">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Monthly sales">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="New vs returning">
+          <zoom type="entire-view" />
+        </viewpoint>
+      </viewpoints>
+      <active id="-1" />
+    </window>
+    <window class="dashboard" name="Retention">
+      <viewpoints>
+        <viewpoint name="Cohort heatmap">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Repeat 90d">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="New customers by region">
+          <zoom type="entire-view" />
+        </viewpoint>
+      </viewpoints>
+      <active id="-1" />
+    </window>
+    <window class="dashboard" name="Segments">
+      <viewpoints>
+        <viewpoint name="RFM segments">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Concentration">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Slipping customers">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Slipping revenue">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Quiet VIPs">
+          <zoom type="entire-view" />
+        </viewpoint>
+      </viewpoints>
+      <active id="-1" />
+    </window>
+    <window class="dashboard" name="Churn risk">
+      <viewpoints>
+        <viewpoint name="T Flagged customers">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Flagged sales">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Expected loss">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="T Top tier">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Churn by silence">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Rule back-test">
+          <zoom type="entire-view" />
+        </viewpoint>
+        <viewpoint name="Contact list">
+          <zoom type="entire-view" />
+        </viewpoint>
+      </viewpoints>
+      <active id="-1" />
+    </window>
+    <window class="dashboard" name="Actions">
+      <viewpoints>
+        <viewpoint name="Recommendations">
+          <zoom type="entire-view" />
+        </viewpoint>
+      </viewpoints>
+      <active id="-1" />
+    </window>
+    <window class="worksheet" name="T Gross sales">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Tracked customers">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Repeat rate">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Sales growth">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T New customers">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Slipping customers">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Slipping revenue">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Quiet VIPs">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Flagged customers">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Flagged sales">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Expected loss">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="T Top tier">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Monthly sales">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="New vs returning">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Cohort heatmap">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Repeat 90d">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="New customers by region">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="RFM segments">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Concentration">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Churn by silence">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Rule back-test">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Contact list">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+    <window class="worksheet" name="Recommendations">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages" />
+            <card type="filters" />
+            <card type="marks" />
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns" />
+          </strip>
+          <strip size="2147483647">
+            <card type="rows" />
+          </strip>
+          <strip size="2147483647">
+            <card type="title" />
+          </strip>
+        </edge>
+      </cards>
+    </window>
+  </windows>
+</workbook>

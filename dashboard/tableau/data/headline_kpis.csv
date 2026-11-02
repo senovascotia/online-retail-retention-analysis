@@ -1,0 +1,2 @@
+gross_sales,tracked_customers,repeat_rate,sales_growth,new_customer_change,slipping_customers,slipping_revenue,slipping_revenue_share,quiet_customers,quiet_lifetime_sales,flagged_customers,flagged_sales,expected_loss,top_tier_customers,top_tier_sales,gross_sales_m,slipping_revenue_m,flagged_sales_k,expected_loss_k,top_tier_sales_k,quiet_lifetime_sales_k
+20476260.43,5878,0.723886,0.019,-0.413308,1929,2002517.3,0.122234,126,858186.07,1365,808607.1,490012.439615,60,218262.44,20.47626,2.002517,808.6071,490.01244,218.26244,858.18607

@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retention Dashboard</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb;
+    --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --wash: rgba(11,11,11,0.05);
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+    --good: #006300; --bad: #d03b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19;
+      --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --wash: rgba(255,255,255,0.07);
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+      --good: #0ca30c; --bad: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --wash: rgba(255,255,255,0.07);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --good: #0ca30c; --bad: #e66767;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px 56px; }
+
+  header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
+  h1 { font-size: 22px; font-weight: 650; margin: 0; letter-spacing: -0.01em; }
+  .lede { color: var(--ink2); margin: 4px 0 0; max-width: 70ch; }
+  .tools { display: flex; gap: 8px; }
+  button { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  button:hover { background: var(--wash); }
+  button:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
+
+  nav.tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  nav.tabs button { border: 0; border-radius: 8px 8px 0 0; background: transparent; padding: 10px 14px; color: var(--ink2); border-bottom: 2px solid transparent; }
+  nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--s1); font-weight: 600; }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); margin-bottom: 16px; }
+  .grid > .wide { grid-column: 1 / -1; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-width: 0; }
+  .card header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .card .sub { margin: 2px 0 0; color: var(--ink2); font-size: 13px; }
+  .card button.toggle { font-size: 12px; padding: 3px 9px; flex: none; color: var(--ink2); }
+  .card button.toggle[aria-pressed="true"] { background: var(--wash); color: var(--ink); }
+  .note { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+  .chart { overflow-x: auto; }
+  .chart svg { display: block; width: 100%; height: auto; min-width: 460px; }
+  .chart svg.wide-min { min-width: 640px; }
+  svg text { font: 11px system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--muted); }
+  svg text.ink { fill: var(--ink2); }
+  svg text.strong { fill: var(--ink); font-weight: 600; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 4px 0 8px; color: var(--ink2); font-size: 12px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  .hero { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .hero .num { font-size: 56px; font-weight: 650; line-height: 1.05; letter-spacing: -0.02em; }
+  .hero .lbl { color: var(--ink2); }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .tile .lbl { color: var(--ink2); font-size: 13px; }
+  .tile .val { font-size: 26px; font-weight: 600; margin: 2px 0; }
+  .tile .delta { font-size: 12px; color: var(--ink2); }
+  .tile .delta.good { color: var(--good); }
+  .tile .delta.bad { color: var(--bad); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--ink2); font-weight: 600; white-space: nowrap; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tablewrap { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+
+  ul.findings { margin: 0; padding-left: 18px; }
+  ul.findings li { margin: 6px 0; }
+
+  #tip { position: fixed; z-index: 10; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); font-size: 12px; display: none; max-width: 260px; }
+  #tip .tt { color: var(--ink2); margin-bottom: 4px; }
+  #tip .row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+  #tip .row .k { display: flex; align-items: center; gap: 6px; color: var(--ink2); }
+  #tip .row .k b { display: inline-block; width: 12px; height: 2px; border-radius: 1px; }
+  #tip .row .v { font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  footer { color: var(--muted); font-size: 12px; margin-top: 24px; }
+  section.panel[hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Retention &amp; revenue leakage: Online Retail II</h1>
+      <p class="lede" id="lede"></p>
+    </div>
+    <div class="tools"><button id="theme" type="button" aria-label="Switch colour theme">Theme: auto</button></div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="panels"></main>
+  <footer id="foot"></footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script id="data" type="application/json">{"meta":{"period":"Dec 2009 to 9 Dec 2011","lede":"Why growth is flat, who drives revenue, and who is about to leave. Built from 1.03M cleaned transactions of a UK online giftware retailer (UCI Online Retail II).","footer":"Data: UCI Online Retail II, cleaned in notebook 01. Revenue is GBP. Churn = no purchase for 161 days after 30 Jun 2011. Scenario figures on the Actions tab are assumptions, not forecasts."},"kpis":{"gross_sales":20476260.43,"tracked_customers":5878,"repeat_rate":0.7238856753997959,"yoy":0.018999861743374424,"new_cust_change":-0.41330774152271277,"cancel_rate":0.07142047177019618,"cancelled_value":1462424.1800000002,"guest_share":0.15146594714413875,"top10_share":0.639,"champ_cust_share":0.2395065958540346,"champ_rev_share":0.6986224716832703,"flagged_customers":1365,"flagged_rev":808607.1000000001,"expected_loss":490012.4396145611,"rule_precision":0.6059957173447538,"top_tier_customers":60,"top_tier_rev":218262.44,"quiet_vips":126,"quiet_vips_rev":858186.0700000001},"monthly":[{"gross":822483.95,"orders":1682,"customers":955,"cancelled":25835.45,"new":955,"returning":0,"aov":488.99,"partial":false,"m":"2009-12"},{"gross":651155.11,"orders":1105,"customers":720,"cancelled":28675.61,"new":383,"returning":337,"aov":589.28,"partial":false,"m":"2010-01"},{"gross":551504.72,"orders":1201,"customers":772,"cancelled":20612.93,"new":374,"returning":398,"aov":459.2,"partial":false,"m":"2010-02"},{"gross":830915.26,"orders":1681,"customers":1057,"cancelled":67668.02,"new":443,"returning":614,"aov":494.3,"partial":false,"m":"2010-03"},{"gross":678875.25,"orders":1462,"customers":942,"cancelled":37354.2,"new":294,"returning":648,"aov":464.35,"partial":false,"m":"2010-04"},{"gross":657705.5,"orders":1500,"customers":966,"cancelled":44434.78,"new":254,"returning":712,"aov":438.47,"partial":false,"m":"2010-05"},{"gross":749537.31,"orders":1645,"customers":1041,"cancelled":72463.44,"new":270,"returning":771,"aov":455.65,"partial":false,"m":"2010-06"},{"gross":648810.27,"orders":1529,"customers":928,"cancelled":31444.79,"new":186,"returning":742,"aov":424.34,"partial":false,"m":"2010-07"},{"gross":695251.91,"orders":1425,"customers":911,"cancelled":40477.52,"new":162,"returning":749,"aov":487.9,"partial":false,"m":"2010-08"},{"gross":921696.99,"orders":1839,"customers":1145,"cancelled":70591.03,"new":243,"returning":902,"aov":501.19,"partial":false,"m":"2010-09"},{"gross":1161902.22,"orders":2301,"customers":1497,"cancelled":81290.74,"new":377,"returning":1120,"aov":504.96,"partial":false,"m":"2010-10"},{"gross":1464293.14,"orders":2747,"customers":1607,"cancelled":47595.94,"new":325,"returning":1282,"aov":533.05,"partial":false,"m":"2010-11"},{"gross":821452.73,"orders":1559,"customers":885,"cancelled":74729.12,"new":76,"returning":809,"aov":526.91,"partial":false,"m":"2010-12"},{"gross":689811.61,"orders":1086,"customers":741,"cancelled":131363.05,"new":71,"returning":670,"aov":635.19,"partial":false,"m":"2011-01"},{"gross":522545.56,"orders":1100,"customers":758,"cancelled":25519.15,"new":124,"returning":634,"aov":475.04,"partial":false,"m":"2011-02"},{"gross":716215.26,"orders":1454,"customers":974,"cancelled":34201.28,"new":179,"returning":795,"aov":492.58,"partial":false,"m":"2011-03"},{"gross":536968.49,"orders":1246,"customers":856,"cancelled":44600.65,"new":106,"returning":750,"aov":430.95,"partial":false,"m":"2011-04"},{"gross":769296.61,"orders":1681,"customers":1056,"cancelled":47202.51,"new":111,"returning":945,"aov":457.64,"partial":false,"m":"2011-05"},{"gross":760547.01,"orders":1533,"customers":991,"cancelled":70569.78,"new":108,"returning":883,"aov":496.12,"partial":false,"m":"2011-06"},{"gross":718076.12,"orders":1475,"customers":949,"cancelled":37919.13,"new":102,"returning":847,"aov":486.83,"partial":false,"m":"2011-07"},{"gross":757841.38,"orders":1361,"customers":935,"cancelled":54330.8,"new":106,"returning":829,"aov":556.83,"partial":false,"m":"2011-08"},{"gross":1056435.19,"orders":1837,"customers":1266,"cancelled":38838.51,"new":189,"returning":1077,"aov":575.09,"partial":false,"m":"2011-09"},{"gross":1151263.73,"orders":2040,"customers":1364,"cancelled":81895.5,"new":221,"returning":1143,"aov":564.34,"partial":false,"m":"2011-10"},{"gross":1503866.78,"orders":2769,"customers":1664,"cancelled":47720.98,"new":191,"returning":1473,"aov":543.11,"partial":false,"m":"2011-11"},{"gross":637808.33,"orders":819,"customers":615,"cancelled":205089.27,"new":28,"returning":587,"aov":778.76,"partial":true,"m":"2011-12"}],"cohorts":[{"c":"2009-12","n":955,"r":[1.0,0.3529,0.334,0.4251,0.3801,0.3592,0.377,0.3424,0.3361,0.3623,0.422,0.4953,0.3759]},{"c":"2010-01","n":383,"r":[1.0,0.2063,0.3107,0.3055,0.2637,0.3003,0.2585,0.2298,0.2794,0.3185,0.3029,0.1723,0.2219]},{"c":"2010-02","n":374,"r":[1.0,0.238,0.2246,0.2914,0.246,0.2005,0.1925,0.2861,0.254,0.2754,0.115,0.1257,0.1524]},{"c":"2010-03","n":443,"r":[1.0,0.1896,0.2302,0.2415,0.2325,0.2032,0.246,0.3025,0.2754,0.1084,0.1151,0.1422,0.2009]},{"c":"2010-04","n":294,"r":[1.0,0.1939,0.1939,0.1633,0.1837,0.2245,0.2755,0.2619,0.1054,0.1088,0.0748,0.1395,0.1395]},{"c":"2010-05","n":254,"r":[1.0,0.1575,0.1693,0.1732,0.1772,0.2559,0.2126,0.126,0.0591,0.0827,0.1142,0.1339,0.1535]},{"c":"2010-06","n":270,"r":[1.0,0.1741,0.1889,0.2037,0.2296,0.2852,0.1259,0.0889,0.0815,0.1185,0.1074,0.137,0.1481]},{"c":"2010-07","n":186,"r":[1.0,0.1559,0.1828,0.2957,0.2903,0.1398,0.1129,0.1452,0.1452,0.1129,0.1344,0.1452,0.1344]},{"c":"2010-08","n":162,"r":[1.0,0.2037,0.2963,0.321,0.1728,0.1173,0.0988,0.1235,0.1358,0.1296,0.1296,0.1235,0.1543]},{"c":"2010-09","n":243,"r":[1.0,0.2263,0.2346,0.1235,0.0905,0.1029,0.1358,0.0988,0.1276,0.1317,0.1152,0.0988,0.2181]},{"c":"2010-10","n":377,"r":[1.0,0.2573,0.1459,0.1247,0.0875,0.0822,0.13,0.1379,0.1061,0.0928,0.1061,0.13,0.191]},{"c":"2010-11","n":325,"r":[1.0,0.1754,0.0923,0.0954,0.0769,0.0862,0.1292,0.0985,0.0862,0.0892,0.1108,0.1446,0.2554]},{"c":"2010-12","n":76,"r":[1.0,0.0921,0.0526,0.0921,0.1184,0.0658,0.0526,0.0921,0.0526,0.0263,0.0921,0.1974,null]},{"c":"2011-01","n":71,"r":[1.0,0.169,0.2113,0.1972,0.2113,0.1549,0.1549,0.1268,0.1127,0.2113,0.2535,null,null]},{"c":"2011-02","n":124,"r":[1.0,0.1613,0.1532,0.1855,0.2177,0.1532,0.1532,0.1452,0.1452,0.1774,null,null,null]},{"c":"2011-03","n":179,"r":[1.0,0.1844,0.2179,0.2011,0.2235,0.1508,0.2067,0.2011,0.2402,null,null,null,null]},{"c":"2011-04","n":106,"r":[1.0,0.2547,0.1981,0.1981,0.1792,0.2358,0.1792,0.2547,null,null,null,null,null]},{"c":"2011-05","n":111,"r":[1.0,0.2342,0.2432,0.1622,0.2162,0.2072,0.2613,null,null,null,null,null,null]},{"c":"2011-06","n":108,"r":[1.0,0.2315,0.213,0.2685,0.2037,0.287,null,null,null,null,null,null,null]},{"c":"2011-07","n":102,"r":[1.0,0.2157,0.3039,0.2745,0.3431,null,null,null,null,null,null,null,null]},{"c":"2011-08","n":106,"r":[1.0,0.2736,0.3113,0.2642,null,null,null,null,null,null,null,null,null]},{"c":"2011-09","n":189,"r":[1.0,0.2698,0.3757,null,null,null,null,null,null,null,null,null,null]},{"c":"2011-10","n":221,"r":[1.0,0.3213,null,null,null,null,null,null,null,null,null,null,null]},{"c":"2011-11","n":191,"r":[1.0,null,null,null,null,null,null,null,null,null,null,null,null]}],"repeat90":[{"g":"Dec 2009*","n":955,"rate":0.6147},{"g":"2010 H1","n":2018,"rate":0.4529},{"g":"2010 H2","n":1369,"rate":0.4098},{"g":"2011 H1","n":699,"rate":0.4149},{"g":"2011 H2","n":240,"rate":0.5583}],"newCust":[{"m":"2010-01","uk":345,"non":38},{"m":"2010-02","uk":343,"non":31},{"m":"2010-03","uk":412,"non":31},{"m":"2010-04","uk":269,"non":25},{"m":"2010-05","uk":233,"non":21},{"m":"2010-06","uk":246,"non":24},{"m":"2010-07","uk":163,"non":23},{"m":"2010-08","uk":149,"non":13},{"m":"2010-09","uk":220,"non":23},{"m":"2010-10","uk":339,"non":38},{"m":"2010-11","uk":305,"non":20},{"m":"2010-12","uk":64,"non":12},{"m":"2011-01","uk":62,"non":9},{"m":"2011-02","uk":109,"non":15},{"m":"2011-03","uk":164,"non":15},{"m":"2011-04","uk":93,"non":13},{"m":"2011-05","uk":97,"non":14},{"m":"2011-06","uk":94,"non":14},{"m":"2011-07","uk":90,"non":12},{"m":"2011-08","uk":86,"non":20},{"m":"2011-09","uk":170,"non":19},{"m":"2011-10","uk":195,"non":26},{"m":"2011-11","uk":176,"non":15}],"segments":[{"segment":"Champions","customers":1398,"customer_share":0.2395065959,"revenue":11445272.08,"revenue_share":0.6986224717,"avg_recency_days":19.0972818312,"avg_orders":16.2811158798,"avg_net_sales":8186.8898998569,"slipping":false},{"segment":"Loyal","customers":472,"customer_share":0.0808634573,"revenue":1632763.08,"revenue_share":0.0996642955,"avg_recency_days":102.3008474576,"avg_orders":9.1228813559,"avg_net_sales":3459.2438135593,"slipping":false},{"segment":"At Risk","customers":493,"customer_share":0.0844611958,"revenue":968670.53,"revenue_share":0.0591279085,"avg_recency_days":297.1967545639,"avg_orders":5.6409736308,"avg_net_sales":1964.8489452333,"slipping":true},{"segment":"Potential Loyalists","customers":705,"customer_share":0.1207812232,"revenue":672765.48,"revenue_share":0.041065785,"avg_recency_days":24.7191489362,"avg_orders":2.8822695035,"avg_net_sales":954.2772765957,"slipping":false},{"segment":"Need Attention","customers":695,"customer_share":0.1190680144,"revenue":549616.41,"revenue_share":0.0335487328,"avg_recency_days":107.6532374101,"avg_orders":2.2532374101,"avg_net_sales":790.8149784173,"slipping":true},{"segment":"Lost","customers":949,"customer_share":0.1625835189,"revenue":384866.52,"revenue_share":0.0234923554,"avg_recency_days":553.3888303477,"avg_orders":1.2497365648,"avg_net_sales":405.5495468915,"slipping":false},{"segment":"About to Sleep","customers":674,"customer_share":0.1154702758,"revenue":291886.03,"revenue_share":0.0178168014,"avg_recency_days":313.6142433234,"avg_orders":1.3902077151,"avg_net_sales":433.0653264095,"slipping":true},{"segment":"Can't Lose Them","customers":67,"customer_share":0.0114784992,"revenue":192344.33,"revenue_share":0.0117407494,"avg_recency_days":488.9552238806,"avg_orders":8.6119402985,"avg_net_sales":2870.8108955224,"slipping":true},{"segment":"Hibernating","customers":152,"customer_share":0.0260407744,"revenue":165903.53,"revenue_share":0.0101267959,"avg_recency_days":494.4144736842,"avg_orders":3.3947368421,"avg_net_sales":1091.4705921053,"slipping":false},{"segment":"New Customers","customers":232,"customer_share":0.0397464451,"revenue":78540.03,"revenue_share":0.0047941045,"avg_recency_days":29.1939655172,"avg_orders":1.0,"avg_net_sales":338.534612069,"slipping":false}],"pareto":[[0,0.0],[1,31.79],[2,39.33],[3,44.48],[4,48.59],[5,51.95],[6,54.92],[7,57.56],[8,59.88],[9,61.99],[10,63.9],[11,65.67],[12,67.31],[13,68.84],[14,70.25],[15,71.59],[16,72.86],[17,74.05],[18,75.17],[19,76.22],[20,77.23],[21,78.2],[22,79.12],[23,79.97],[24,80.8],[25,81.58],[26,82.33],[27,83.05],[28,83.72],[29,84.38],[30,85.01],[31,85.62],[32,86.19],[33,86.75],[34,87.29],[35,87.8],[36,88.29],[37,88.76],[38,89.21],[39,89.64],[40,90.07],[41,90.47],[42,90.86],[43,91.24],[44,91.61],[45,91.97],[46,92.31],[47,92.64],[48,92.96],[49,93.27],[50,93.57],[51,93.86],[52,94.14],[53,94.41],[54,94.67],[55,94.92],[56,95.16],[57,95.39],[58,95.62],[59,95.84],[60,96.04],[61,96.24],[62,96.44],[63,96.63],[64,96.8],[65,96.98],[66,97.14],[67,97.3],[68,97.45],[69,97.6],[70,97.74],[71,97.87],[72,98.0],[73,98.13],[74,98.25],[75,98.37],[76,98.49],[77,98.6],[78,98.7],[79,98.8],[80,98.9],[81,99.0],[82,99.08],[83,99.17],[84,99.25],[85,99.32],[86,99.39],[87,99.46],[88,99.53],[89,99.58],[90,99.64],[91,99.69],[92,99.74],[93,99.79],[94,99.83],[95,99.87],[96,99.91],[97,99.94],[98,99.97],[99,99.99],[100,100.0]],"churnBands":[{"band":"0-30","n":1016,"rate":0.186},{"band":"31-60","n":621,"rate":0.2528},{"band":"61-90","n":354,"rate":0.387},{"band":"91-120","n":341,"rate":0.4692},{"band":"121-180","n":392,"rate":0.5357},{"band":"181-365","n":1602,"rate":0.6523}],"rules":[{"rule":"silent > 45 days","flagged":2974,"precision":0.5497646268,"recall":0.8614330875,"revenue_captured":0.8054275092},{"rule":"silent > 60 days","flagged":2689,"precision":0.5771662328,"recall":0.8177028451,"revenue_captured":0.7406575734},{"rule":"silent > 90 days","flagged":2335,"precision":0.6059957173,"recall":0.7455216017,"revenue_captured":0.6514274391},{"rule":"silent > 120 days","flagged":1994,"precision":0.6293881645,"recall":0.6612223393,"revenue_captured":0.5358510777},{"rule":"silent > 150 days","flagged":1764,"precision":0.6422902494,"recall":0.5969441517,"revenue_captured":0.4727055414},{"rule":"silent > 180 days","flagged":1602,"precision":0.652309613,"recall":0.5505795574,"revenue_captured":0.4214572065},{"rule":"silent > 1.5x own avg gap (3+ orders)","flagged":845,"precision":0.4331360947,"recall":0.5343065693,"revenue_captured":0.5180626236},{"rule":"silent > 2x own avg gap (3+ orders)","flagged":650,"precision":0.4630769231,"recall":0.4394160584,"revenue_captured":0.4396888529},{"rule":"silent > 3x own avg gap (3+ orders)","flagged":398,"precision":0.527638191,"recall":0.3065693431,"revenue_captured":0.3453442444},{"rule":"silent > 4x own avg gap (3+ orders)","flagged":279,"precision":0.5627240143,"recall":0.2291970803,"revenue_captured":0.2877839218}],"topRisk":[{"id":15749,"days":236,"avg_gap":97.0,"orders":2,"trailing":21535.9,"early":false},{"id":16180,"days":101,"avg_gap":43.4,"orders":11,"trailing":10217.48,"early":true},{"id":12590,"days":212,"avg_gap":null,"orders":1,"trailing":9861.38,"early":false},{"id":12980,"days":158,"avg_gap":29.0,"orders":21,"trailing":7092.06,"early":true},{"id":13093,"days":276,"avg_gap":10.952380952380953,"orders":43,"trailing":6942.07,"early":true},{"id":13027,"days":114,"avg_gap":31.944444444444443,"orders":19,"trailing":6912.0,"early":true},{"id":16553,"days":164,"avg_gap":33.53333333333333,"orders":16,"trailing":5668.82,"early":true},{"id":12688,"days":114,"avg_gap":null,"orders":1,"trailing":4873.81,"early":false},{"id":14016,"days":162,"avg_gap":53.9,"orders":11,"trailing":4328.46,"early":true},{"id":12378,"days":130,"avg_gap":433.0,"orders":2,"trailing":4008.62,"early":false},{"id":13802,"days":139,"avg_gap":30.764705882352942,"orders":18,"trailing":3906.27,"early":true},{"id":18073,"days":115,"avg_gap":9.222222222222221,"orders":10,"trailing":3846.74,"early":true}],"recs":[{"rank":1,"recommendation":"Win back high-value customers silent for more than 90 days","evidence":"1,365 customers flagged, \u00a3809K trailing sales; the rule catches 75% of churners; top tier is 60 customers worth \u00a3218K","base":490012.4396145611,"low":49001.2439614561,"mid":98002.4879229122,"high":147003.7318843683,"effort":"Low"},{"rank":2,"recommendation":"Protect Champions and Loyal buyers with a per-customer reorder alert (1.5x their own average gap)","evidence":"1,870 customers (32%) deliver 84% of trailing sales; churn rises steeply with silence, so earlier contact matters","base":6677419.01,"low":66774.1901,"mid":133548.3802,"high":200322.5703,"effort":"Low"},{"rank":3,"recommendation":"Find out why new-customer acquisition fell 41% and restore it (UK first)","evidence":"646 fewer new customers in Jun-Nov 2011 than 2010 (UK -43%); first-order value and 90-day repeat rate held steady, so volume, not quality, is the issue","base":371062.4,"low":92765.6,"mid":185531.2,"high":371062.4,"effort":"Medium-High"},{"rank":4,"recommendation":"Add order-entry checks for sale-then-cancel errors and capture customer IDs on guest orders","evidence":"Cancellations are 7.1% of sales; about a quarter of cancelled value was reversed within an hour; guest orders are 15% of sales and cannot be retained","base":731212.0900000001,"low":73121.209,"mid":146242.418,"high":219363.627,"effort":"Low-Medium"}]}</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const NS = "http://www.w3.org/2000/svg";
+
+/* ---------- DOM helpers (text goes in via textContent only) ---------- */
+function mk(ns, tag, attrs, kids) {
+  const e = ns ? document.createElementNS(NS, tag) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "on") for (const [ev, fn] of Object.entries(v)) e.addEventListener(ev, fn);
+    else if (v !== null && v !== undefined) e.setAttribute(k, v);
+  }
+  for (const kid of kids || []) e.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  return e;
+}
+const h = (tag, attrs, ...kids) => mk(false, tag, attrs, kids);
+const s = (tag, attrs, ...kids) => mk(true, tag, attrs, kids);
+
+/* ---------- formatting ---------- */
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const monthLabel = ym => `${MONTHS[+ym.slice(5, 7) - 1]} ’${ym.slice(2, 4)}`;
+const monthLong = ym => `${MONTHS[+ym.slice(5, 7) - 1]} ${ym.slice(0, 4)}`;
+const gbp = (n, d = 1) => {
+  const a = Math.abs(n), sg = n < 0 ? "-" : "";
+  if (a >= 1e6) return `${sg}£${(a / 1e6).toFixed(d)}M`;
+  if (a >= 1e3) return `${sg}£${(a / 1e3).toFixed(0)}K`;
+  return `${sg}£${a.toFixed(0)}`;
+};
+const compact = n => n >= 1e6 ? `${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${+(n / 1e3).toFixed(1)}K` : `${n}`;
+const int = n => Math.round(n).toLocaleString("en-GB");
+const pct = (x, d = 0) => `${(x * 100).toFixed(d)}%`;
+
+function niceMax(max, count = 4) {
+  const raw = max / count, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(v => v >= raw);
+  return { step, max: step * Math.ceil(max / step) };
+}
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+const darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : darkMq.matches;
+const RAMP_LIGHT = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"];
+const RAMP_DARK  = ["#0d366b", "#104281", "#184f95", "#1c5cab", "#2a78d6", "#5598e7", "#86b6ef"];
+function hex(c) { return [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)); }
+function rampColor(t) {
+  const ramp = isDark() ? RAMP_DARK : RAMP_LIGHT;
+  const x = Math.min(1, Math.max(0, t)) * (ramp.length - 1), i = Math.min(ramp.length - 2, Math.floor(x));
+  const a = hex(ramp[i]), b = hex(ramp[i + 1]), f = x - i;
+  const rgb = a.map((v, j) => Math.round(v + (b[j] - v) * f));
+  return { css: `rgb(${rgb})`, dark: (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) < 140 };
+}
+const rerenders = [];
+const rerenderAll = () => rerenders.forEach(fn => fn());
+(function themeToggle() {
+  const btn = document.getElementById("theme");
+  const modes = ["auto", "light", "dark"];
+  let saved = "auto";
+  try { saved = localStorage.getItem("retail-theme") || "auto"; } catch (e) {}
+  const apply = m => {
+    if (m === "auto") delete root.dataset.theme; else root.dataset.theme = m;
+    btn.textContent = `Theme: ${m}`;
+    try { localStorage.setItem("retail-theme", m); } catch (e) {}
+  };
+  apply(saved);
+  btn.addEventListener("click", () => {
+    const cur = root.dataset.theme || "auto";
+    apply(modes[(modes.indexOf(cur) + 1) % 3]);
+    rerenderAll();
+  });
+  darkMq.addEventListener("change", rerenderAll);
+})();
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function showTip(evt, title, rows) {
+  tip.replaceChildren();
+  tip.append(h("div", { class: "tt" }, title));
+  for (const r of rows) {
+    const key = h("span", { class: "k" });
+    if (r.color) key.append(h("b", { style: `background:${r.color}` }));
+    key.append(r.label);
+    tip.append(h("div", { class: "row" }, key, h("span", { class: "v" }, r.value)));
+  }
+  tip.style.display = "block";
+  const pad = 14, w = tip.offsetWidth, hh = tip.offsetHeight;
+  let x = evt.clientX + pad, y = evt.clientY + pad;
+  if (x + w > innerWidth - 8) x = evt.clientX - w - pad;
+  if (y + hh > innerHeight - 8) y = evt.clientY - hh - pad;
+  tip.style.left = `${Math.max(8, x)}px`;
+  tip.style.top = `${Math.max(8, y)}px`;
+}
+const hideTip = () => { tip.style.display = "none"; };
+
+/* ---------- cards with a table view ---------- */
+function buildTable({ cols, rows }) {
+  const head = h("tr", {}, ...cols.map(c => h("th", { class: c.num ? "num" : "" }, c.label)));
+  const body = rows.map(r => h("tr", {}, ...cols.map((c, i) => h("td", { class: c.num ? "num" : "" }, r[i]))));
+  return h("div", { class: "tablewrap" }, h("table", {}, h("thead", {}, head), h("tbody", {}, ...body)));
+}
+function card(parent, { title, sub, wide, draw, table, tableOnly, legend, note }) {
+  const body = h("div", { class: "chart" });
+  const toggle = table && !tableOnly ? h("button", { type: "button", class: "toggle", "aria-pressed": "false" }, "Table view") : null;
+  const sec = h("section", { class: "card" + (wide ? " wide" : "") },
+    h("header", {}, h("div", {}, h("h3", {}, title), sub ? h("p", { class: "sub" }, sub) : ""), toggle || ""));
+  if (legend) {
+    sec.append(h("div", { class: "legend" }, ...legend.map(l => h("span", {}, h("i", { style: `background:${l.color}` }), l.label))));
+  }
+  sec.append(body);
+  if (note) sec.append(h("p", { class: "note" }, note));
+  let asTable = !!tableOnly;
+  const render = () => {
+    hideTip();
+    body.replaceChildren();
+    if (asTable) body.append(buildTable(table())); else draw(body);
+  };
+  if (toggle) toggle.addEventListener("click", () => {
+    asTable = !asTable;
+    toggle.setAttribute("aria-pressed", String(asTable));
+    toggle.textContent = asTable ? "Chart view" : "Table view";
+    render();
+  });
+  parent.append(sec);
+  rerenders.push(render);
+  render();
+}
+
+/* ---------- chart primitives ---------- */
+const C = { s1: "var(--s1)", s2: "var(--s2)", s3: "var(--s3)" };
+
+function topRounded(x, y, w, hgt, r) {
+  r = Math.min(r, w / 2, hgt);
+  return `M${x},${y + hgt}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hgt}Z`;
+}
+function rightRounded(x, y, w, hgt, r) {
+  r = Math.min(r, hgt / 2, w);
+  return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hgt - r}Q${x + w},${y + hgt} ${x + w - r},${y + hgt}H${x}Z`;
+}
+
+/* Columns: single or stacked series over categories. */
+function columns(host, o) {
+  const W = o.width || 760, H = o.height || 280, m = { l: 48, r: 12, t: 18, b: 30 };
+  const pw = W - m.l - m.r, ph = H - m.t - m.b, n = o.cats.length;
+  const totals = o.cats.map((_, i) => o.series.reduce((a, se) => a + (se.vals[i] || 0), 0));
+  const top = o.yMax ? { step: o.yStep, max: o.yMax } : niceMax(Math.max(...totals));
+  const ys = v => m.t + ph - (v / top.max) * ph;
+  const band = pw / n, bw = Math.min(24, band * 0.7);
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria, class: o.cls || "" });
+  for (let v = 0; v <= top.max + 1e-9; v += top.step) {
+    svg.append(s("line", { x1: m.l, x2: W - m.r, y1: ys(v), y2: ys(v), style: `stroke:${v === 0 ? "var(--axis)" : "var(--grid)"};stroke-width:1` }));
+    svg.append(s("text", { x: m.l - 8, y: ys(v) + 4, "text-anchor": "end" }, (o.yFmt || compact)(v)));
+  }
+  const every = Math.ceil(n / (o.maxLabels || 9));
+  o.cats.forEach((c, i) => {
+    if (i % every === 0 || i === n - 1 && n % every === 1) svg.append(s("text", { x: m.l + band * (i + 0.5), y: H - 10, "text-anchor": "middle" }, o.catLabel ? o.catLabel(c) : c));
+  });
+  o.cats.forEach((c, i) => {
+    const cx = m.l + band * (i + 0.5), x = cx - bw / 2;
+    const wash = s("rect", { x: m.l + band * i, y: m.t, width: band, height: ph, style: "fill:transparent" });
+    svg.append(wash);
+    let cum = 0;
+    const live = o.series.filter(se => (se.vals[i] || 0) > 0);
+    live.forEach((se, j) => {
+      const y1 = ys(cum + se.vals[i]), y0 = ys(cum);
+      const yTop = j === live.length - 1 ? y1 : y1 + 1, yBot = j === 0 ? y0 : y0 - 1;
+      const hgt = Math.max(0, yBot - yTop);
+      if (j === live.length - 1) svg.append(s("path", { d: topRounded(x, yTop, bw, hgt, 4), style: `fill:${se.color}` }));
+      else svg.append(s("rect", { x, y: yTop, width: bw, height: hgt, style: `fill:${se.color}` }));
+      cum += se.vals[i];
+    });
+    if (o.valueLabel && totals[i] > 0) svg.append(s("text", { x: cx, y: ys(totals[i]) - 6, "text-anchor": "middle", class: "ink" }, o.valueLabel(totals[i], i)));
+    const rows = o.series.map(se => ({ color: se.color, label: se.name, value: (o.tipFmt || o.yFmt || int)(se.vals[i] || 0) }));
+    if (o.series.length > 1) rows.push({ label: "Total", value: (o.tipFmt || o.yFmt || int)(totals[i]) });
+    const extra = o.tipExtra ? o.tipExtra(i) : [];
+    const on = {
+      pointermove: e => { wash.style.fill = "var(--wash)"; showTip(e, o.tipTitle ? o.tipTitle(c, i) : String(c), rows.concat(extra)); },
+      pointerleave: () => { wash.style.fill = "transparent"; hideTip(); },
+    };
+    for (const [ev, fn] of Object.entries(on)) wash.addEventListener(ev, fn);
+  });
+  host.append(svg);
+}
+
+/* Horizontal grouped bars. */
+function hbars(host, o) {
+  const W = 760, rowH = o.rowH || 38, m = { l: o.left || 130, r: 54, t: 6, b: 24 };
+  const H = m.t + m.b + rowH * o.cats.length, pw = W - m.l - m.r;
+  const top = niceMax(Math.max(...o.series.flatMap(se => se.vals)), 4);
+  const xs = v => m.l + (v / top.max) * pw, th = 10, gap = 2;
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": o.aria });
+  for (let v = 0; v <= top.max + 1e-9; v += top.step) {
+    svg.append(s("line", { x1: xs(v), x2: xs(v), y1: m.t, y2: H - m.b, style: `stroke:${v === 0 ? "var(--axis)" : "var(--grid)"};stroke-width:1` }));
+    svg.append(s("text", { x: xs(v), y: H - 8, "text-anchor": "middle" }, o.xFmt(v)));
+  }
+  o.cats.forEach((c, i) => {
+    const y = m.t + rowH * i, groupH = th * o.series.length + gap * (o.series.length - 1), y0 = y + (rowH - groupH) / 2;
+    svg.append(s("text", { x: m.l - 10, y: y + rowH / 2 + 4, "text-anchor": "end", class: "ink" }, c));
+    const wash = s("rect", { x: 0, y, width: W, height: rowH, style: "fill:transparent" });
+    svg.append(wash);
+    o.series.forEach((se, j) => {
+      const by = y0 + j * (th + gap), w = Math.max(1, xs(se.vals[i]) - m.l);
+      svg.append(s("path", { d: rightRounded(m.l, by, w, th, 4), style: `fill:${se.color}` }));
+      if (o.labelSeries === j) svg.append(s("text", { x: m.l + w + 6, y: by + th - 1, class: "ink" }, o.xFmt(se.vals[i])));
+    });
+    const rows = o.series.map(se => ({ color: se.color, label: se.name, value: o.xFmt(se.vals[i]) })).concat(o.tipExtra ? o.tipExtra(i) : []);
+    wash.addEventListener("pointermove", e => { wash.style.fill = "var(--wash)"; showTip(e, c, rows); });
+    wash.addEventListener("pointerleave", () => { wash.style.fill = "transparent"; hideTip(); });
+  });
+  host.append(svg);
+}
+
+/* Cohort heatmap. */
+function heatmap(host) {
+  const rowsData = D.cohorts, K = 12;
+  const W = 760, m = { l: 112, r: 12, t: 24, b: 8 }, cell = (W - m.l - m.r) / K, rh = 20;
+  const H = m.t + m.b + rh * rowsData.length;
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", class: "wide-min", "aria-label": "Cohort retention heatmap" });
+  for (let k = 1; k <= K; k++) svg.append(s("text", { x: m.l + cell * (k - 0.5), y: 15, "text-anchor": "middle" }, k));
+  rowsData.forEach((row, i) => {
+    const y = m.t + rh * i;
+    svg.append(s("text", { x: m.l - 8, y: y + 14, "text-anchor": "end", class: "ink" }, `${monthLabel(row.c)} · n=${int(row.n)}`));
+    for (let k = 1; k <= K; k++) {
+      const v = row.r[k];
+      if (v === null || v === undefined) continue;
+      const col = rampColor(v / 0.5);
+      const x = m.l + cell * (k - 1);
+      const rect = s("rect", { x: x + 1, y: y + 1, width: cell - 2, height: rh - 2, rx: 2, style: `fill:${col.css}` });
+      svg.append(rect);
+      svg.append(s("text", { x: x + cell / 2, y: y + 14, "text-anchor": "middle", style: `fill:${col.dark ? "#fff" : "#0b0b0b"};pointer-events:none` }, Math.round(v * 100)));
+      rect.addEventListener("pointermove", e => {
+        rect.style.stroke = "var(--ink)"; rect.style.strokeWidth = "1.5";
+        showTip(e, `${monthLong(row.c)} cohort, month ${k}`, [
+          { label: "Active customers", value: `${int(v * row.n)} of ${int(row.n)}` },
+          { label: "Retention", value: pct(v, 1) }]);
+      });
+      rect.addEventListener("pointerleave", () => { rect.style.stroke = "none"; hideTip(); });
+    }
+  });
+  host.append(svg);
+}
+
+/* Pareto line. */
+function pareto(host) {
+  const W = 560, H = 320, m = { l: 48, r: 24, t: 16, b: 38 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const xs = v => m.l + (v / 100) * pw, ys = v => m.t + ph - (v / 100) * ph;
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Revenue concentration curve" });
+  for (let v = 0; v <= 100; v += 25) {
+    svg.append(s("line", { x1: m.l, x2: W - m.r, y1: ys(v), y2: ys(v), style: `stroke:${v === 0 ? "var(--axis)" : "var(--grid)"};stroke-width:1` }));
+    svg.append(s("text", { x: m.l - 8, y: ys(v) + 4, "text-anchor": "end" }, `${v}%`));
+    svg.append(s("text", { x: xs(v), y: H - 22, "text-anchor": "middle" }, `${v}%`));
+  }
+  svg.append(s("text", { x: m.l + pw / 2, y: H - 6, "text-anchor": "middle" }, "Share of customers, ranked by sales"));
+  svg.append(s("line", { x1: xs(0), y1: ys(0), x2: xs(100), y2: ys(100), style: "stroke:var(--muted);stroke-width:1" }));
+  svg.append(s("text", { x: xs(58), y: ys(53) + 14, "text-anchor": "middle", transform: `rotate(-${Math.atan(ph / pw) * 180 / Math.PI} ${xs(58)} ${ys(53) + 14})` }, "equal share"));
+  const pts = D.pareto.map(([x, y]) => `${xs(x)},${ys(y)}`);
+  svg.append(s("path", { d: `M${xs(0)},${ys(0)}L${pts.join("L")}L${xs(100)},${ys(0)}Z`, style: "fill:var(--s1);opacity:0.10" }));
+  svg.append(s("polyline", { points: pts.join(" "), style: "fill:none;stroke:var(--s1);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" }));
+  const p10 = D.pareto.find(p => p[0] === 10);
+  svg.append(s("circle", { cx: xs(10), cy: ys(p10[1]), r: 5, style: "fill:var(--s1);stroke:var(--surface);stroke-width:2" }));
+  svg.append(s("text", { x: xs(10) + 12, y: ys(p10[1]) + 16, class: "strong" }, `Top 10% = ${Math.round(p10[1])}% of sales`));
+  const cross = s("line", { y1: m.t, y2: m.t + ph, style: "stroke:var(--muted);stroke-width:1;display:none" });
+  const dot = s("circle", { r: 5, style: "fill:var(--s1);stroke:var(--surface);stroke-width:2;display:none" });
+  svg.append(cross, dot);
+  const hit = s("rect", { x: m.l, y: m.t, width: pw, height: ph, style: "fill:transparent" });
+  hit.addEventListener("pointermove", e => {
+    const box = svg.getBoundingClientRect(), px = (e.clientX - box.left) * (W / box.width);
+    const x = Math.max(0, Math.min(100, Math.round((px - m.l) / pw * 100))), y = D.pareto[x][1];
+    cross.style.display = dot.style.display = "block";
+    cross.setAttribute("x1", xs(x)); cross.setAttribute("x2", xs(x));
+    dot.setAttribute("cx", xs(x)); dot.setAttribute("cy", ys(y));
+    showTip(e, `Top ${x}% of customers`, [{ color: C.s1, label: "Share of sales", value: `${y.toFixed(1)}%` }]);
+  });
+  hit.addEventListener("pointerleave", () => { cross.style.display = dot.style.display = "none"; hideTip(); });
+  svg.append(hit);
+  host.append(svg);
+}
+
+/* ---------- views ---------- */
+const K = D.kpis;
+const monthsFull = D.monthly.filter(m => !m.partial);
+
+function tile(label, val, delta, tone) {
+  return h("div", { class: "tile" }, h("div", { class: "lbl" }, label), h("div", { class: "val" }, val),
+    h("div", { class: "delta " + (tone || "") }, delta));
+}
+
+function viewOverview(p) {
+  const top = h("div", { class: "grid" });
+  const hero = h("div", { class: "card hero" }, h("div", { class: "num" }, gbp(K.gross_sales)),
+    h("div", { class: "lbl" }, `gross sales, ${D.meta.period}`));
+  top.append(hero);
+  const tiles = h("div", { class: "tiles" },
+    tile("Tracked customers", int(K.tracked_customers), "buyers with a customer ID"),
+    tile("Repeat purchase rate", pct(K.repeat_rate), "placed 2+ orders"),
+    tile("Sales growth", `${K.yoy >= 0 ? "+" : ""}${(K.yoy * 100).toFixed(1)}%`, "Jan–Nov 2011 vs 2010"),
+    tile("New customers", pct(K.new_cust_change), "Jun–Nov 2011 vs 2010", "bad"));
+  top.append(tiles);
+  p.append(top);
+
+  const g = h("div", { class: "grid" });
+  card(g, {
+    title: "Gross sales by month", sub: "GBP, cancellations excluded. December 2011 is partial (to 9 Dec) and left out.", wide: true,
+    draw: b => columns(b, {
+      cats: monthsFull.map(m => m.m), series: [{ name: "Gross sales", color: C.s1, vals: monthsFull.map(m => m.gross) }],
+      yFmt: v => v >= 1e6 ? `£${+(v / 1e6).toFixed(1)}M` : v >= 1e3 ? `£${v / 1e3}K` : `£${v}`, tipFmt: v => gbp(v, 2), catLabel: monthLabel, tipTitle: monthLong, aria: "Monthly gross sales",
+      tipExtra: i => [{ label: "Orders", value: int(monthsFull[i].orders) }, { label: "Avg order value", value: gbp(monthsFull[i].aov, 0) }],
+    }),
+    table: () => ({ cols: [{ label: "Month" }, { label: "Gross sales", num: 1 }, { label: "Cancelled", num: 1 }, { label: "Orders", num: 1 }, { label: "Customers", num: 1 }, { label: "Avg order value", num: 1 }],
+      rows: D.monthly.map(m => [monthLong(m.m) + (m.partial ? " (partial)" : ""), gbp(m.gross, 2), gbp(m.cancelled, 2), int(m.orders), int(m.customers), gbp(m.aov, 0)]) }),
+  });
+  card(g, {
+    title: "Active customers: returning vs new", sub: "Customers buying each month. The first month (Dec 2009) counts everyone as new because the data starts there.",
+    legend: [{ color: C.s1, label: "Returning" }, { color: C.s2, label: "New" }],
+    draw: b => columns(b, {
+      cats: monthsFull.map(m => m.m), series: [{ name: "Returning", color: C.s1, vals: monthsFull.map(m => m.returning) }, { name: "New", color: C.s2, vals: monthsFull.map(m => m.new) }],
+      width: 560, yFmt: compact, tipFmt: int, catLabel: monthLabel, tipTitle: monthLong, aria: "Active customers by month, new and returning",
+    }),
+    table: () => ({ cols: [{ label: "Month" }, { label: "Returning", num: 1 }, { label: "New", num: 1 }],
+      rows: monthsFull.map(m => [monthLong(m.m), int(m.returning), int(m.new)]) }),
+  });
+  const find = h("section", { class: "card" }, h("header", {}, h("div", {}, h("h3", {}, "Key insights"))),
+    h("ul", { class: "findings" },
+      h("li", {}, `Sales are flat (${K.yoy >= 0 ? "+" : ""}${(K.yoy * 100).toFixed(1)}% on the same months a year earlier), but not because customers leave after one order: ${pct(K.repeat_rate)} reorder.`),
+      h("li", {}, `New-customer acquisition fell ${Math.abs(Math.round(K.new_cust_change * 100))}% (Jun–Nov 2011 vs 2010). Cohort quality has been stable since mid-2010, so volume is the part to investigate.`),
+      h("li", {}, `Revenue is concentrated: the top 10% of customers bring ${pct(K.top10_share)} of sales, and RFM Champions (${pct(K.champ_cust_share)} of customers) bring ${pct(K.champ_rev_share)}.`),
+      h("li", {}, `Silence is the churn signal, not slowing gaps or cancellations. A 90-day rule flags ${int(K.flagged_customers)} customers worth ${gbp(K.flagged_rev)} in trailing sales.`),
+      h("li", {}, `Leaks: cancellations are ${pct(K.cancel_rate, 1)} of gross sales; ${pct(K.guest_share)} of sales have no customer ID.`)));
+  g.append(find);
+  p.append(g);
+}
+
+function viewRetention(p) {
+  const g = h("div", { class: "grid" });
+  card(g, {
+    title: "Cohort retention", wide: true,
+    sub: "Share of each monthly cohort that ordered again k months after their first purchase. Colour intensity rises with retention.",
+    draw: heatmap,
+    table: () => ({ cols: [{ label: "Cohort" }, { label: "Customers", num: 1 }].concat([...Array(12)].map((_, i) => ({ label: `M${i + 1}`, num: 1 }))),
+      rows: D.cohorts.map(r => [monthLong(r.c), int(r.n)].concat(r.r.slice(1, 13).map(v => v == null ? "" : pct(v)))) }),
+    note: "Monthly activity is seasonal: a September–November cohort looks stronger at month 12 because customers return for the next peak. The Dec 2009 cohort is overstated (it includes customers who bought before the data starts).",
+  });
+  card(g, {
+    title: "90-day repeat rate", sub: "Share of new customers placing a second order within 90 days of their first.",
+    draw: b => columns(b, {
+      cats: D.repeat90.map(r => r.g), series: [{ name: "Repeat within 90 days", color: C.s1, vals: D.repeat90.map(r => r.rate * 100) }],
+      width: 560, yMax: 80, yStep: 20, yFmt: v => `${v}%`, tipFmt: v => `${v.toFixed(1)}%`, valueLabel: v => `${Math.round(v)}%`, tipTitle: c => `Acquired ${c}`,
+      tipExtra: i => [{ label: "Customers", value: int(D.repeat90[i].n) }], aria: "90-day repeat rate by acquisition period", maxLabels: 6,
+    }),
+    table: () => ({ cols: [{ label: "Acquired" }, { label: "Customers", num: 1 }, { label: "Repeat in 90 days", num: 1 }], rows: D.repeat90.map(r => [r.g, int(r.n), pct(r.rate, 1)]) }),
+    note: "2009 H2 is Dec 2009 only and overstated. 2011 H2 covers Jul–Sep 2011 cohorts, which ordered again in the Q4 peak.",
+  });
+  card(g, {
+    title: "New customers per month", sub: "First-time buyers by UK and non-UK address. Acquisition is lower through 2011.",
+    legend: [{ color: C.s1, label: "UK" }, { color: C.s2, label: "Non-UK" }],
+    draw: b => columns(b, {
+      cats: D.newCust.map(r => r.m), series: [{ name: "UK", color: C.s1, vals: D.newCust.map(r => r.uk) }, { name: "Non-UK", color: C.s2, vals: D.newCust.map(r => r.non) }],
+      width: 560, yFmt: compact, tipFmt: int, catLabel: monthLabel, tipTitle: monthLong, aria: "New customers per month, UK and non-UK",
+    }),
+    table: () => ({ cols: [{ label: "Month" }, { label: "UK", num: 1 }, { label: "Non-UK", num: 1 }], rows: D.newCust.map(r => [monthLong(r.m), int(r.uk), int(r.non)]) }),
+    note: "Dec 2009 (955 customers, including people who had bought before the data starts) and the partial Dec 2011 are left out.",
+  });
+  p.append(g);
+}
+
+function viewSegments(p) {
+  const segs = D.segments;
+  const g = h("div", { class: "grid" });
+  card(g, {
+    title: "RFM segments: customers vs revenue", wide: true,
+    sub: "Customers scored 1–5 on recency, frequency and monetary value, then grouped. Sorted by revenue.",
+    legend: [{ color: C.s1, label: "Share of customers" }, { color: C.s2, label: "Share of net revenue" }],
+    draw: b => hbars(b, {
+      cats: segs.map(x => x.segment), aria: "Share of customers and revenue by RFM segment", xFmt: v => `${Math.round(v * 100)}%`, labelSeries: 1,
+      series: [{ name: "Share of customers", color: C.s1, vals: segs.map(x => x.customer_share) }, { name: "Share of net revenue", color: C.s2, vals: segs.map(x => x.revenue_share) }],
+      tipExtra: i => [{ label: "Customers", value: int(segs[i].customers) }, { label: "Net revenue", value: gbp(segs[i].revenue, 2) }, { label: "Avg days since last order", value: int(segs[i].avg_recency_days) }, { label: "Avg orders", value: segs[i].avg_orders.toFixed(1) }],
+    }),
+    table: () => ({ cols: [{ label: "Segment" }, { label: "Customers", num: 1 }, { label: "% customers", num: 1 }, { label: "Net revenue", num: 1 }, { label: "% revenue", num: 1 }, { label: "Avg days since order", num: 1 }, { label: "Avg orders", num: 1 }, { label: "Avg net sales", num: 1 }],
+      rows: segs.map(x => [x.segment, int(x.customers), pct(x.customer_share, 1), gbp(x.revenue, 2), pct(x.revenue_share, 1), int(x.avg_recency_days), x.avg_orders.toFixed(1), gbp(x.avg_net_sales, 0)]) }),
+    note: "Revenue is lifetime net sales (sales minus cancellations) within the two-year window, not a forecast.",
+  });
+  card(g, {
+    title: "Revenue concentration", sub: "Cumulative share of tracked sales earned by the top share of customers.",
+    draw: pareto,
+    table: () => ({ cols: [{ label: "Top share of customers" }, { label: "Share of sales", num: 1 }], rows: [1, 5, 10, 20, 50].map(x => [`${x}%`, `${D.pareto[x][1].toFixed(1)}%`]) }),
+  });
+  const slipping = segs.filter(x => x.slipping);
+  const sum = (a, f) => a.reduce((t, x) => t + f(x), 0);
+  g.append(h("section", { class: "card" }, h("header", {}, h("div", {}, h("h3", {}, "Who is slipping away?"),
+    h("p", { class: "sub" }, "Need Attention, About to Sleep, At Risk and Can't Lose Them"))),
+    h("div", { class: "tiles" },
+      tile("Customers", int(sum(slipping, x => x.customers)), pct(sum(slipping, x => x.customer_share)) + " of scored customers"),
+      tile("Net revenue to date", gbp(sum(slipping, x => x.revenue)), pct(sum(slipping, x => x.revenue_share)) + " of total"),
+      tile("Silent 142+ days", int(K.quiet_vips), `top-value customers, ${gbp(K.quiet_vips_rev, 0)} lifetime`)),
+    h("p", { class: "note" }, "142 days is twice the 71-day upper end of a typical reorder gap. Many At Risk customers have been silent 6–13 months and may already be lost.")));
+  p.append(g);
+}
+
+function viewChurn(p) {
+  p.append(h("div", { class: "tiles", style: "margin-bottom:16px" },
+    tile("Flagged customers", int(K.flagged_customers), "silent 90+ days, active in last 12 months"),
+    tile("Trailing 12m sales", gbp(K.flagged_rev), "of flagged customers"),
+    tile("Expected loss", gbp(K.expected_loss), `at ${pct(K.rule_precision)} rule precision`, "bad"),
+    tile("Top tier", `${int(K.top_tier_customers)} customers`, `${gbp(K.top_tier_rev, 0)} trailing sales`)));
+  const g = h("div", { class: "grid" });
+  card(g, {
+    title: "Churn rises with silence", sub: "Share of customers with no purchase in the next 161 days, by days since last purchase (back-test at 30 Jun 2011).",
+    draw: b => columns(b, {
+      cats: D.churnBands.map(r => r.band), series: [{ name: "Churned", color: C.s2, vals: D.churnBands.map(r => r.rate * 100) }],
+      width: 560, yMax: 80, yStep: 20, yFmt: v => `${v}%`, tipFmt: v => `${v.toFixed(1)}%`, valueLabel: v => `${Math.round(v)}%`, tipTitle: c => `${c} days silent`,
+      tipExtra: i => [{ label: "Customers", value: int(D.churnBands[i].n) }], aria: "Churn rate by days since last purchase", maxLabels: 6,
+    }),
+    table: () => ({ cols: [{ label: "Days silent" }, { label: "Customers", num: 1 }, { label: "Churn rate", num: 1 }], rows: D.churnBands.map(r => [r.band, int(r.n), pct(r.rate, 1)]) }),
+  });
+  card(g, {
+    title: "Early-warning rules, back-tested", tableOnly: true,
+    sub: "Precision = flagged customers who truly churned. Recall = churners flagged. Revenue = churners' trailing sales flagged.",
+    table: () => ({ cols: [{ label: "Rule" }, { label: "Flagged", num: 1 }, { label: "Precision", num: 1 }, { label: "Recall", num: 1 }, { label: "Revenue", num: 1 }],
+      rows: D.rules.map(r => [r.rule, int(r.flagged), pct(r.precision), pct(r.recall), pct(r.revenue_captured)]) }),
+    note: "Base churn is 44% for all active customers and 28% for customers with 3+ order days, so the relative-gap rules are measured on a different group.",
+  });
+  card(g, {
+    title: "Top-value customers to contact first", wide: true, tableOnly: true,
+    sub: "Highest trailing 12-month net sales among customers silent for more than 90 days (as of 10 Dec 2011). “Early flag” = silent beyond 1.5x their own average gap.",
+    table: () => ({ cols: [{ label: "Customer" }, { label: "Days silent", num: 1 }, { label: "Own avg gap (days)", num: 1 }, { label: "Order days", num: 1 }, { label: "Trailing 12m sales", num: 1 }, { label: "Early flag" }],
+      rows: D.topRisk.map(r => [`#${r.id}`, int(r.days), r.avg_gap == null ? "n/a" : r.avg_gap.toFixed(0), int(r.orders), gbp(r.trailing, 0), r.early ? "Yes" : "No"]) }),
+  });
+  p.append(g);
+}
+
+function viewActions(p) {
+  const g = h("div", { class: "grid" });
+  card(g, {
+    title: "Recommendations, ranked by value for effort", wide: true, tableOnly: true,
+    sub: "Annual revenue impact under low / mid / high scenarios. The measured base comes from the data; the scenario percentages are assumptions to replace with test results.",
+    table: () => ({ cols: [{ label: "#", num: 1 }, { label: "Action" }, { label: "Evidence" }, { label: "Measured base", num: 1 }, { label: "Low", num: 1 }, { label: "Mid", num: 1 }, { label: "High", num: 1 }, { label: "Effort" }],
+      rows: D.recs.map(r => [r.rank, r.recommendation, r.evidence, gbp(r.base, 0), gbp(r.low, 0), gbp(r.mid, 0), gbp(r.high, 0), r.effort]) }),
+    note: "Not covered by this data: why acquisition fell (no channel data), what a win-back campaign will really recover (run a holdout test), and whether anything would change behaviour (product mix adds little to churn prediction, notebook 11).",
+  });
+  p.append(g);
+}
+
+/* ---------- shell ---------- */
+document.getElementById("lede").textContent = D.meta.lede;
+document.getElementById("foot").textContent = D.meta.footer;
+const TABS = [["Overview", viewOverview], ["Retention", viewRetention], ["Segments", viewSegments], ["Churn risk", viewChurn], ["Actions", viewActions]];
+const tabsEl = document.getElementById("tabs"), panels = document.getElementById("panels");
+TABS.forEach(([name, fn], i) => {
+  const panel = h("section", { class: "panel", id: `panel-${i}`, role: "tabpanel", "aria-labelledby": `tab-${i}` });
+  fn(panel);
+  panels.append(panel);
+  const btn = h("button", { type: "button", role: "tab", id: `tab-${i}`, "aria-controls": `panel-${i}` }, name);
+  btn.addEventListener("click", () => select(i));
+  tabsEl.append(btn);
+});
+function select(i) {
+  hideTip();
+  [...tabsEl.children].forEach((b, j) => b.setAttribute("aria-selected", String(i === j)));
+  [...panels.children].forEach((p, j) => { p.hidden = i !== j; });
+  try { history.replaceState(null, "", `#${TABS[i][0].toLowerCase().replace(" ", "-")}`); } catch (e) {}
+}
+const start = TABS.findIndex(t => `#${t[0].toLowerCase().replace(" ", "-")}` === location.hash);
+select(start < 0 ? 0 : start);
+</script>
+</body>
+</html>

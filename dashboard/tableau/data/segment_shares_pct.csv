@@ -1,0 +1,21 @@
+revenue_rank,segment,measure,share_pct
+1,Champions,Share of customers,23.95066
+2,Loyal,Share of customers,8.086346
+3,At Risk,Share of customers,8.44612
+4,Potential Loyalists,Share of customers,12.078122
+5,Need Attention,Share of customers,11.906801
+6,Lost,Share of customers,16.258352
+7,About to Sleep,Share of customers,11.547028
+8,Can't Lose Them,Share of customers,1.14785
+9,Hibernating,Share of customers,2.604077
+10,New Customers,Share of customers,3.974645
+1,Champions,Share of net revenue,69.862247
+2,Loyal,Share of net revenue,9.96643
+3,At Risk,Share of net revenue,5.912791
+4,Potential Loyalists,Share of net revenue,4.106578
+5,Need Attention,Share of net revenue,3.354873
+6,Lost,Share of net revenue,2.349236
+7,About to Sleep,Share of net revenue,1.78168
+8,Can't Lose Them,Share of net revenue,1.174075
+9,Hibernating,Share of net revenue,1.01268
+10,New Customers,Share of net revenue,0.47941

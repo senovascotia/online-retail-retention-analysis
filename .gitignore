@@ -1,0 +1,27 @@
+# environment
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# data: rebuild with notebooks 00-11
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Tableau recovery files and local backups
+~*.twbr
+dashboard/tableau/backup/
+dashboard/tableau/*.tmp
+
+# LaTeX build output
+docs/latex/*.aux
+docs/latex/*.log
+docs/latex/*.out
+docs/latex/*.toc
+docs/latex/*.synctex.gz
+docs/latex/overleaf_upload.zip
+
+# OS / editor
+Thumbs.db
+.DS_Store
